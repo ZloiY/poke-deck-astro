@@ -13,13 +13,12 @@ import { removeAuthToken } from "src/utils/authToken";
 
 export const Header = ({ showFlip }: { showFlip: boolean }) => {
   const [signingOut, toggleSignOut] = useState(false);
-  const { user, refreshUser } = useAuth();
+  const user = useAuth();
   const [showNavMenu, toggleNavMenu] = useState(false);
 
   const onSignOut = () => {
     toggleSignOut(true);
     removeAuthToken();
-    refreshUser();
   }
 
   return (

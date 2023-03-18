@@ -25,7 +25,7 @@ export const post: APIRoute = async ({ request }) => {
     const hash = sha256(`${data.password}${user?.salt}`).toString();
     if (user && hash == user.hash) {
       const refresh_token = jwt.sign({}, import.meta.env.AUTH_SECRET, {
-        expiresIn: "7d",
+        expiresIn: Date.now() + 7 * 24 * 60 * 60 * 1000,
       });
       const session: Session = {
         id: user.id,
@@ -33,7 +33,7 @@ export const post: APIRoute = async ({ request }) => {
         refresh_token,
       };
       const access_token = jwt.sign(session, import.meta.env.AUTH_SECRET, {
-        expiresIn: "2h",
+        expiresIn: Date.now() + 2 * 60 * 60 * 1000,
       });
       const message = {
         id: v4(),

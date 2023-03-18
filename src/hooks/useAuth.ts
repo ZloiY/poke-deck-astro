@@ -1,29 +1,35 @@
-import { useCallback, useMemo, useState } from "react";
-import { getAuthToken } from "src/utils/authToken";
+import { useStore } from "effector-react";
+import { useEffect, useState } from "react";
 import { z } from "zod";
 
-const getAuthInfo = (): { id: string, name: string } | null => {
-  const token = getAuthToken();
+import { $authToken } from "src/utils/authToken";
+
+const getAuthInfo = (token: string): { id: string, name: string } | null => {
   if (token.length > 0) {
-    const jwtTokenBody = token.split(' ')[1].split('.')[1];
+    const jwtTokenBody = token.split('.')[1];
     const body = JSON.parse(decodeURIComponent(atob(jwtTokenBody)));
     const validatedBody = z.object({
       id: z.string(),
       name: z.string(),
+      exp: z.number(),
     }).safeParse(body);
     if (validatedBody.success) {
-      return validatedBody.data;
+      if (new Date() < new Date(validatedBody.data.exp)) {
+        const { id, name } = validatedBody.data;
+        return { id, name };
+      }
     }
   }
   return null;
 }
 
 export const useAuth = () => {
-  const [user, setUser] = useState(() => getAuthInfo());
+  const authToken = useStore($authToken);
+  const [user, setUser] = useState(() => getAuthInfo(authToken ?? ""));
 
-  const refreshUser = useCallback(() => {
-    setUser(getAuthInfo());  
-  },[])
+  useEffect(() => {
+    setUser(getAuthInfo(authToken ?? ""));
+  }, [authToken])
 
-  return useMemo(() => ({ user, refreshUser }), [user]);
+  return user; 
 }

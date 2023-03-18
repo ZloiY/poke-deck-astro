@@ -7,7 +7,7 @@ export const post: APIRoute = ({ request }) => {
   const access_token = authorizationToken?.split(" ")[1];
   console.log('refresh access', access_token);
   if (access_token) {
-    const decodedToken = jwt.verify(access_token, import.meta.env.AUTH_SECRET);
+    const decodedToken = jwt.verify(access_token, import.meta.env.AUTH_SECRET, { ignoreExpiration: true });
     console.log("decodedToken", decodedToken);
     const validatedToken = validateToken(decodedToken);
     if (validatedToken.success) {
@@ -21,12 +21,12 @@ export const post: APIRoute = ({ request }) => {
         new Date(refreshToken.exp ?? "") > new Date()
       ) {
         const newRefreshToken = jwt.sign({}, import.meta.env.AUTH_SECRET, {
-          expiresIn: "7d",
+          expiresIn: Date.now() + 7 * 24 * 60 * 60 * 1000,
         });
         const newToken = jwt.sign(
           { ...validatedToken, refresh_token: newRefreshToken },
           import.meta.env.AUTH_SECRET,
-          { expiresIn: "2h" },
+          { expiresIn: Date.now() + 2 * 60 * 60 * 1000 },
         );
         return new Response(JSON.stringify(newToken), {
           status: 200,

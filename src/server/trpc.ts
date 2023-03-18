@@ -31,6 +31,7 @@ import { TRPCError, initTRPC } from "@trpc/server";
 import type { FetchCreateContextFnOptions } from "@trpc/server/adapters/fetch";
 
 import { prisma } from "./db";
+import { setAuthToken } from "src/utils/authToken";
 
 const pokemonApi = new PokemonClient();
 
@@ -77,6 +78,7 @@ export const createTRPCContext = async (opts: FetchCreateContextFnOptions) => {
       });
       if (response.status == 200) {
         const token = await response.json()  
+        setAuthToken(token);
         session = checkToken(token);
       }
     } catch (err) {
