@@ -1,4 +1,9 @@
 ---
+import '@fontsource/coiny';
+import '@fontsource/modak';
+import '@fontsource/fredoka';
+import { NotificationsPopups } from 'src/components/NotificationPopup';
+
 export interface Props {
 	title: string;
 }
@@ -7,7 +12,7 @@ const { title } = Astro.props;
 ---
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="font-fredoka h-full overflow-y-hidden">
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width" />
@@ -15,21 +20,19 @@ const { title } = Astro.props;
 		<meta name="generator" content={Astro.generator} />
 		<title>{title}</title>
 	</head>
-	<body>
-		<slot />
+	<body class="bg-purple-500 text-white h-full overflow-y-hidden">
+    <main class="flex flex-col h-full w-full justify-center items-center relative bg-purple-500 overflow-y-scroll">
+      <NotificationsPopups client:load />
+      <slot />
+    </main>
 	</body>
 </html>
 <style is:global>
 	:root {
 		--accent: 124, 58, 237;
 		--accent-gradient: linear-gradient(45deg, rgb(var(--accent)), #da62c4 30%, white 60%);
-	}
-	html {
-		font-family: system-ui, sans-serif;
-		background-color: #F6F6F6;
-	}
-	code {
-		font-family: Menlo, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono,
-			Bitstream Vera Sans Mono, Courier New, monospace;
+    --font-coiny: "Coiny";
+    --font-modak: "Modak";
+    --font-fredoka: "Fredoka";
 	}
 </style>

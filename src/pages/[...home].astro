@@ -1,0 +1,7 @@
+---
+import HeaderLayout from "src/layouts/HeaderLayout.astro";
+import { Home } from "../components/Home"; 
+---
+<HeaderLayout title="PokeDeck home" showFlip={true}>
+  <Home client:load/>
+</HeaderLayout>

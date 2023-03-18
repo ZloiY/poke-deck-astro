@@ -1,0 +1,16 @@
+---
+import Layout from "./Layout.astro";
+import { Header } from "../components/Header";
+
+export interface Props {
+  title: string;
+  showFlip: boolean;
+}
+
+const { title, showFlip } = Astro.props;
+
+---
+<Layout title={title}>
+  <Header client:only showFlip={showFlip}/>
+  <slot/>
+</Layout>
