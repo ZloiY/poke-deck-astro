@@ -1,3 +1,4 @@
+import { useStore } from "effector-react";
 import { useEffect, useState } from "react";
 
 import { ReactComponent as Remove } from "@icons/close-circle.svg";
@@ -10,10 +11,7 @@ import { Loader } from "../Loader";
 import { Select } from "../Select";
 import { ModalContainer } from "./ModalContainer";
 import { trpcReact } from "src/api";
-import { useStore } from "effector-react";
-import { createStore } from "effector";
 
-const $modalState = createStore(false);
 
 export const AddCards = ({
   deckId,
@@ -31,7 +29,7 @@ export const AddCards = ({
       numberOfEmptySlots: 20, 
     });
   const addCardsToDecks = trpcReact.deck.addCardsToDecks.useMutation();
-  const [showModal, { closeModal, openModal }] = useModalState($modalState);
+  const [showModal, { closeModal, openModal }] = useModalState();
   const [selectedDeck, setSelectedDeck] = useState(deck);
   const { pushMessage } = useMessageBus();
 //  const transitions = useTransition(showModal ? pokemons : [], {
@@ -100,7 +98,7 @@ export const AddCards = ({
                         isLoading={decksLoading}
                         onChange={(value) => setSelectedDeck(value as Deck)}
                         getOptionLabel={(deck) =>
-                          `${deck.name} ${deck.deckLength}/${env.NEXT_PUBLIC_DECK_MAX_SIZE}`
+                          `${deck.name} ${deck.deckLength}/${import.meta.env.PUBLIC_DECK_MAX_SIZE}`
                         }
                         isOptionSelected={(deck) => deck.id == selectedDeck?.id}
                         options={userDecks}
@@ -112,8 +110,8 @@ export const AddCards = ({
             </Loader>
           </div>
           <div className="flex flex-wrap justify-center gap-3">
-            {transitions((style, pokemon) => (
-              <a.div style={style} className="relative">
+            {pokemons.map((pokemon) => (
+              <div className="relative">
                 <PreviewCard
                   className="w-32 h-52 text-xl border-yellow-500 border-2"
                   pokemon={pokemon}
@@ -123,7 +121,7 @@ export const AddCards = ({
                   className="absolute top-1 right-1 w-10 h-10 text-red-600 hover:text-red-400 active:text-red-500 active:scale-90 cursor-pointer"
                   onClick={() => removePokemon(pokemon)}
                 />
-              </a.div>
+              </div>
             ))}
           </div>
           <Button

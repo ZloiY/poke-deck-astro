@@ -13,7 +13,6 @@ $authToken.on(setAuthToken, (_, token) => token);
 $authToken.on(resetToken, () => null);
 
 export const getAuthToken = () => {
-    console.log(localStorage.getItem('poke_deck_astro_token'));
   const access_token = getAccessToken();   
   return access_token ? `Bearer ${access_token}` : '';
 };

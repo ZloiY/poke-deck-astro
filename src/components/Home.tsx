@@ -2,7 +2,6 @@ import { useStore } from "effector-react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import type { Pokemon } from "pokenode-ts";
-import type { Deck } from "@prisma/client";
 
 import { ReactComponent as Check } from "@icons/check.svg";
 
@@ -47,8 +46,8 @@ const FixedButton = ({ onClick, existingPokemonsLength }: { onClick: () => void,
   ) : null;
 };
 
-const HomeUnwrapped = ({ page, pokemons }: { pokemons: Pokemon[], page: number}) => {
-  const [_, showModal] = useModalState();
+const HomeUnwrapped = ({ page, deckId, pokemons }: { pokemons: Pokemon[], deckId?: string, page: number }) => {
+  const [_, { openModal }] = useModalState();
   const { flipState } = useFlipState();
   const pagination = usePagination({ page, limit: 15, totalLength: 1275,
     onNextPage: (nextPage) => { location.assign(`/home/${nextPage}`)},
@@ -57,6 +56,7 @@ const HomeUnwrapped = ({ page, pokemons }: { pokemons: Pokemon[], page: number})
   const { pushMessage } = useMessageBus();
   const selectedPokemons = useStore($selectedPokemons);
   const { data: emptyDecks } = trpcReact.deck.getEmptyUserDecks.useQuery({ numberOfEmptySlots: 20 });
+  const { data: pokemonsInDeck, refetch } = trpcReact.pokemon.getPokemonsByDeckId.useQuery(deckId ?? "");
   const { mutateAsync: createDeck, isLoading: deckCreating } =
     trpcReact.deck.createDeck.useMutation();
 
@@ -76,25 +76,25 @@ const HomeUnwrapped = ({ page, pokemons }: { pokemons: Pokemon[], page: number})
  //   }
  // });
 
-//  const createDeckWithCards = useCallback(
-//    (params: { name: string; private: boolean }) => {
-//      const cards = selectedPokemons.map((pokemon) => ({
-//        name: pokemon.name,
-//        imageUrl:
-//          pokemon.sprites.other?.["official-artwork"].front_default ??
-//          pokemon.sprites.front_default ??
-//          "",
-//      }));
-//      createDeck({ ...params, cards })
-//        .then((message) => {
-//          location.assign(`/pokemons/deck/${message.deck?.id}`);
-//          return message;
-//        })
-//        .then(pushMessage)
-//        .then(resetPokemons);
-//    },
-//    [selectedPokemons],
-//  );
+  const createDeckWithCards = useCallback(
+    (params: { name: string; private: boolean }) => {
+      const cards = selectedPokemons.map((pokemon) => ({
+        name: pokemon.name,
+        imageUrl:
+          pokemon.sprites.other?.["official-artwork"].front_default ??
+          pokemon.sprites.front_default ??
+          "",
+      }));
+      createDeck({ ...params, cards })
+        .then((message) => {
+          location.assign(`/pokemons/deck/${message.deck?.id}`);
+          return message;
+        })
+        .then(pushMessage)
+        .then(resetPokemons);
+    },
+    [selectedPokemons],
+  );
 
   const updateQuery = useCallback(
     (search: string) => {
@@ -105,15 +105,14 @@ const HomeUnwrapped = ({ page, pokemons }: { pokemons: Pokemon[], page: number})
   );
 
   return (
-    <div className="flex flex-col h-full w-full mt-28">
-      {/*{(props.deckId || decksLength > 0) && (
-        <AddCards deckId={props.deckId} onSubmit={refetch} />
+    <div className="flex flex-col h-full w-full mt-10">
+      {(deckId || decksLength > 0) && (
+        <AddCards deckId={deckId} onSubmit={refetch} />
       )}
-      {decksLength == 0 && !props.deckId && (
+      {decksLength == 0 && !deckId && (
         <CreateDeck create={createDeckWithCards} isLoading={deckCreating} />
       )}
-      <FixedButton onClick={showModal} existingPokemonsLength={pokemonsInDeck?.length ?? 0}/>
-      */}
+      <FixedButton onClick={openModal} existingPokemonsLength={pokemonsInDeck?.length ?? 0}/>
       <div className="flex relative justify-center items-center">
         <SearchBar searchValue={""} onSearch={updateQuery} />
       </div>
@@ -139,7 +138,7 @@ const HomeUnwrapped = ({ page, pokemons }: { pokemons: Pokemon[], page: number})
               <FlipCard
                 pokemon={pokemon}
                 selectedPokemons={selectedPokemons}
-                pokemonsInDeck={[]}
+                pokemonsInDeck={pokemonsInDeck}
                 keepFlipped={flipState}
               />
             </motion.div>

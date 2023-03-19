@@ -1,48 +1,31 @@
-import { createEvent, createStore } from "effector";
+import type { Store } from "effector";
 import type { ReactNode } from "react";
+import { AnimatePresence, motion, useSpring } from "framer-motion";
 import ReactModal from "react-modal";
 import { twMerge } from "tailwind-merge";
 
 import { ReactComponent as Close } from "@icons/close.svg";
-import { useStore } from "effector-react";
 
-export const $isModalShown = createStore(false);
-const toggleModal = createEvent<boolean>();
-$isModalShown.on(toggleModal, (_, value) => value);
+import { useModalState } from "src/hooks";
 
-typeof window !== 'undefined' && ReactModal.setAppElement("body");
+typeof window !== 'undefined' && ReactModal.setAppElement("main");
 
 export const ModalContainer = ({
   title = "",
   children,
   onClose,
-  anotherAtom,
+  anotherState,
 }: {
   children: (onClose: () => void) => ReactNode;
   onClose?: () => void;
   title?: string;
-  anotherAtom?: typeof $isModalShown,
+  anotherState?: Store<boolean>,
 }) => {
-  const modalState = useStore(anotherAtom ?? $isModalShown);
-
- // const [style, api] = useSpring(
- //   () => ({
- //     from: { opacity: 0, scale: 0 },
- //     to: [{ opacity: 1, scale: 1 }],
- //     reset: true,
- //     config: config.stiff,
- //   }),
- //   [modalState],
- // );
+  const [modalState, { openModal, closeModal }] = useModalState(anotherState)
 
   const onRequestClose = () => {
-  //  api.start({
-  //    from: { opacity: 1, scale: 1 },
-  //    to: { opacity: 0, scale: 0 },
-  //    config: config.stiff,
-  //  });
     const timeoutId = setTimeout(() => {
-      toggleModal(false);
+      closeModal();
       onClose?.();
       clearTimeout(timeoutId);
     }, 100);
@@ -55,19 +38,25 @@ export const ModalContainer = ({
       className="static outline-none"
       onRequestClose={onRequestClose}
     >
-      <div
-        className={twMerge(title && "bg-purple-900 text-white rounded-xl flex flex-col relative opacity-0 shadow-[0_0_20px_5px] shadow-purple-500")}
-      >
-        {title && <div className="flex justify-between mb-2 p-3 border-b-2 border-yellow-500">
-          <span className="text-2xl font-coiny">{title}</span>
-          <Close
-            role="button"
-            className="cursor-pointer w-8 h-8 hover:text-yellow-400"
-            onClick={onRequestClose}
-          />
-        </div>}
-        {children(onRequestClose)}
-      </div>
+      <AnimatePresence>
+        <motion.div
+          initial={{ opacity: 0, scale: 0 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 1 }}
+          transition={{ duration: 0.15, type: "spring", stiffness: 100}} 
+          className={twMerge(title && "bg-purple-900 text-white rounded-xl flex flex-col relative shadow-[0_0_20px_5px] shadow-purple-500")}
+        >
+          {title && <div className="flex justify-between mb-2 p-3 border-b-2 border-yellow-500">
+            <span className="text-2xl font-coiny">{title}</span>
+            <Close
+              role="button"
+              className="cursor-pointer w-8 h-8 hover:text-yellow-400"
+              onClick={onRequestClose}
+            />
+          </div>}
+          {children(onRequestClose)}
+        </motion.div>
+      </AnimatePresence>
     </ReactModal>
   );
 };

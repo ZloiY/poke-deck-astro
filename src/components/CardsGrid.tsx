@@ -1,5 +1,6 @@
 import type { Pokemon } from "pokenode-ts";
-import { ReactElement, useEffect } from "react";
+import { motion } from "framer-motion";
+import { ReactElement, useCallback } from "react";
 
 import { useLoadingState } from "../hooks";
 import { twMerge } from "tailwind-merge";
@@ -17,65 +18,33 @@ export const CardsGrid = <P extends Pokemon>({
   children: <T extends { pokemon: Pokemon }>(pokemon: Pokemon, index: number) => ReactElement<T>
 }) => {
   const loadingState = useLoadingState();
-
-//  const [{ position, left }, api] = useSpring(() => ({
-//    from: { position: "absolute", left: 0 },
-//    to: [{ position: "absolute", left: 0 }, { position: "static" }],
-//    immediate: true,
-//    config: config.slow,
-//  }));
-
-  useEffect(() => {
-//    switch (true) {
-//      case paginationState == "Initial": {
-//        toggleAnimation(true);
-//        break;
-//      }
-//      case loadingState == "Started" && paginationState == "Next": {
-//        api.start({
-//          from: { position: "absolute", left: 0 },
-//          to: [{ position: "absolute", left: -5000 }],
-//          config: { tension: 120, friction: 100 },
-//        });
-//        break;
-//      }
-//      case loadingState == "Started" && paginationState == "Prev": {
-//        api.start({
-//          from: { position: "absolute", left: 0 },
-//          to: [{ position: "absolute", left: 5000 }],
-//          config: { tension: 120, friction: 100 },
-//        });
-//        break;
-//      }
-//      case loadingState == "Finished" && paginationState == "Next": {
-//        api.start({
-//          from: { position: "absolute", left: 5000 },
-//          to: [{ position: "absolute", left: 0 }],
-//          config: config.slow,
-//        });
-//        break;
-//      }
-//      case loadingState == "Finished" && paginationState == "Prev": {
-//        api.start({
-//          from: { position: "absolute", left: -5000 },
-//          to: [{ position: "absolute", left: 0 }],
-//          config: config.slow,
-//        });
-//        break;
-//      }
-//      default: {
-//        toggleAnimation(false);
-//      }
-//    }
+  
+  const left = useCallback(() => {
+    switch (true) {
+      case loadingState == "Hold" && paginationState == "Next": {
+        return -5000
+      }
+      case loadingState == "Hold" && paginationState == "Prev": {
+        return 5000
+      }
+      case loadingState == "Finished": {
+        return 0;
+      }
+    }
   }, [loadingState, paginationState]);
 
   return (
     <div className="h-full relative">
-      <div
+      <motion.div
+        style={{ x: 0, position: loadingState == "Hold" ? "static" : "absolute" }}
+        animate={{
+          x: left()
+        }}
+        transition={{ duration: 12.5, type: "spring", mass: 11, stiffness: 100, bounce: 20}}
         className={twMerge("w-full mt-5", cardGridStyles)}
       >
         {pokemons?.map((pokemon, index) => (children(pokemon, index)))}
-      </div>
+      </motion.div>
     </div>
   );
 };

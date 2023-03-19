@@ -13,7 +13,7 @@ export const useModalState = (
   $modalStore?: typeof $modalVisible,
   showOnMount?: boolean,
 ) => {
-  const isModalShown = useStore($modalVisible);
+  const isModalShown = useStore($modalStore ?? $modalVisible);
   const [api] = useState(injectStore($modalStore));
 
   useEffect(() => {

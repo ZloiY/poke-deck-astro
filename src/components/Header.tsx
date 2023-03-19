@@ -19,7 +19,7 @@ export const Header = ({ showFlip }: { showFlip: boolean }) => {
   const onSignOut = () => {
     toggleSignOut(true);
     removeAuthToken();
-    location.assign("/login");
+    location?.assign("/login");
   }
 
   return (

@@ -5,18 +5,18 @@ import { ReactComponent as Loader } from "@icons/loader.svg";
 
 import { ModalContainer } from "./ModalContainer";
 
-const refetchStateAtom = createStore(false)
+const refetchState= createStore(false)
 const toggleModal = createEvent<boolean>();
-refetchStateAtom.on(toggleModal, (_, value) => value);
+refetchState.on(toggleModal, (_, value) => value);
 
-export const Refetch = ({ isRefetching, anotherAtom }: { isRefetching: boolean, anotherAtom?: typeof refetchStateAtom }) => {
+export const Refetch = ({ isRefetching, anotherState }: { isRefetching: boolean, anotherState?: typeof refetchState}) => {
 
   useEffect(() => {
     toggleModal(isRefetching);
   }, [isRefetching]);
 
   return (
-    <ModalContainer anotherAtom={anotherAtom ?? refetchStateAtom}>
+    <ModalContainer anotherState={anotherState ?? refetchState}>
       {() => (
         <div className="w-full h-full flex items-center justify-center">
           <div className="animate-spin">

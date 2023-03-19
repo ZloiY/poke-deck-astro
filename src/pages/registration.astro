@@ -5,6 +5,8 @@ import { TRPCRegistration  } from "src/components/Registration";
 export const prerender = true;
 ---
 <Layout title="PokeDeck registration">
-  <Welcome/>
-  <TRPCRegistration client:load/>
+ <div class="flex flex-col justify-center items-center h-full w-full">
+   <Welcome/>
+   <TRPCRegistration client:load/>
+ </div>
 </Layout>

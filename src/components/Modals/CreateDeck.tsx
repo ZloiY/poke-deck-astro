@@ -35,7 +35,6 @@ export const CreateDeck = ({
           console.log(error);
         })
         .finally(closeModal);
-
   return (
     <ModalContainer title="Create new deck">
       {(onClose) => (
