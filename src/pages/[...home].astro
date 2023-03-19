@@ -1,7 +1,24 @@
 ---
 import HeaderLayout from "src/layouts/HeaderLayout.astro";
 import { Home } from "../components/Home"; 
+import { getQueryParams } from "src/utils/queryParser";
+import { trpcAstro } from "src/api";
+import { z } from "zod";
+
+const { home } = Astro.params;
+const queryShema = z.object({
+  deckId: z.string(),
+  search: z.string()
+}).partial();
+
+const url = Astro.url;
+const queryParams = getQueryParams<typeof queryShema>(url.href ?? "", queryShema); 
+const page = z.number().parse(+(home?.split("/")[1] ?? "0"));
+const pokemons = await trpcAstro.pokemon
+  .getPokemonList
+  .query({ offset: page * 15, limit: 15, searchQuery: queryParams?.search ?? "" }) 
+
 ---
 <HeaderLayout title="PokeDeck home" showFlip={true}>
-  <Home client:load/>
+  <Home pokemons={pokemons} page={page} client:only/>
 </HeaderLayout>

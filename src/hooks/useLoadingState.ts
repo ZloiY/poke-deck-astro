@@ -21,7 +21,7 @@ export const useLoadingState = () => {
   }, []);
 
   useEffect(() => {
-    let timeoutId: number;
+    let timeoutId: NodeJS.Timeout;
     if (loadingState == "Finished") {
       timeoutId = setTimeout(() => {
         setLoadingState("Hold");

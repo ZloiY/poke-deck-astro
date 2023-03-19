@@ -19,15 +19,16 @@ export const Header = ({ showFlip }: { showFlip: boolean }) => {
   const onSignOut = () => {
     toggleSignOut(true);
     removeAuthToken();
+    location.assign("/login");
   }
 
   return (
     <div className={twMerge("w-full flex items-center justify-between bg-purple-900 py-5 px-6 text-4xl",
     "shadow-lg shadow-purple-700/75 sticky top-0 z-50",
     showNavMenu && "relative")}>
-     {/* <Refetch
+      <Refetch
         isRefetching={signingOut}
-       />*/}
+      />
       <PageLoader />
       {user && <>
       <div role="button" className="text-white lg:hidden cursor-pointer

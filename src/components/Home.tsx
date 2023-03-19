@@ -1,5 +1,8 @@
 import { useStore } from "effector-react";
+import { AnimatePresence, motion } from "framer-motion";
 import { useCallback, useEffect, useMemo, useState } from "react";
+import type { Pokemon } from "pokenode-ts";
+import type { Deck } from "@prisma/client";
 
 import { ReactComponent as Check } from "@icons/check.svg";
 
@@ -44,28 +47,24 @@ const FixedButton = ({ onClick, existingPokemonsLength }: { onClick: () => void,
   ) : null;
 };
 
-const paginationParams = { page: 0, limit: 15, totalLength: 1275, onNextPage: () => {}, onPrevPage: () => {} };
-
-const HomeUnwrapped = () => {
+const HomeUnwrapped = ({ page, pokemons }: { pokemons: Pokemon[], page: number}) => {
   const [_, showModal] = useModalState();
   const { flipState } = useFlipState();
-  const pagination = usePagination(paginationParams);
+  const pagination = usePagination({ page, limit: 15, totalLength: 1275,
+    onNextPage: (nextPage) => { location.assign(`/home/${nextPage}`)},
+    onPrevPage: (prevPage) => { location.assign(`/home/${prevPage}`)}
+  });
   const { pushMessage } = useMessageBus();
   const selectedPokemons = useStore($selectedPokemons);
-  const { data: decks } = trpcReact.deck.getEmptyUserDecks.useQuery({ numberOfEmptySlots: 20 });
+  const { data: emptyDecks } = trpcReact.deck.getEmptyUserDecks.useQuery({ numberOfEmptySlots: 20 });
   const { mutateAsync: createDeck, isLoading: deckCreating } =
     trpcReact.deck.createDeck.useMutation();
-  const { data: pokemons, isLoading } = trpcReact.pokemon.getPokemonList.useQuery({
-    searchQuery: "",
-    offset: 0, 
-    limit: 15
-  });
 
   useEffect(() => {
       return () => { resetPokemons() }
   }, []);
   
-  //const decksLength = useMemo(() => decks?.length ?? 0, [decks]);
+ const decksLength = useMemo(() => emptyDecks?.length ?? 0, [emptyDecks]);
 
  // const drag = useDrag(({ down, axis, delta: [x] }) => {
  //   if (down && axis == "x") {
@@ -100,13 +99,13 @@ const HomeUnwrapped = () => {
   const updateQuery = useCallback(
     (search: string) => {
       if (search?.length > 0)
-        location.assign("/home");
+        location.assign(`/home?search=${search}`);
     },
     [],
   );
 
   return (
-    <div className="flex flex-col h-full w-full mt-10">
+    <div className="flex flex-col h-full w-full mt-28">
       {/*{(props.deckId || decksLength > 0) && (
         <AddCards deckId={props.deckId} onSubmit={refetch} />
       )}
@@ -124,24 +123,32 @@ const HomeUnwrapped = () => {
         onNextPage={pagination.goToNextPage}
         onPrevPage={pagination.goToPrevPage}
       />
-       <Loader isLoading={isLoading}>
-        <CardsGrid
-          paginationState={pagination.paginationState}
-          pokemons={pokemons}
-        >
-          {(pokemon) => (
-            <FlipCard
+       <Loader isLoading={false}>
+       <AnimatePresence>
+          <CardsGrid
+            paginationState={pagination.paginationState}
+            pokemons={pokemons}
+          >
+            {(pokemon, index) => (
+            <motion.div
               key={pokemon.id}
-              pokemon={pokemon}
-              selectedPokemons={selectedPokemons}
-              pokemonsInDeck={[]}
-              keepFlipped={flipState}
-            />
-          )}
-        </CardsGrid>
+              initial={{ opacity: 0, scale: 0 }}
+              animate={{ opacity: 1, scale: 1}}
+              transition={{ duration: 0.1, type: "spring",  stiffness: 80, delay: index * 0.2}}
+            >
+              <FlipCard
+                pokemon={pokemon}
+                selectedPokemons={selectedPokemons}
+                pokemonsInDeck={[]}
+                keepFlipped={flipState}
+              />
+            </motion.div>
+            )}
+          </CardsGrid>
+        </AnimatePresence>
       </Loader>
     </div>
   );
 };
 
-export const Home = TRPCWrapper(HomeUnwrapped);
+export const Home = TRPCWrapper<Parameters<typeof HomeUnwrapped>[0]>(HomeUnwrapped);

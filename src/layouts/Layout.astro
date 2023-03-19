@@ -3,6 +3,7 @@ import '@fontsource/coiny';
 import '@fontsource/modak';
 import '@fontsource/fredoka';
 import { NotificationsPopups } from 'src/components/NotificationPopup';
+import { PageLoader } from 'src/components/PageLoader';
 
 export interface Props {
 	title: string;
@@ -22,6 +23,7 @@ const { title } = Astro.props;
 	</head>
 	<body class="bg-purple-500 text-white h-full overflow-y-hidden">
     <main class="flex flex-col h-full w-full justify-center items-center relative bg-purple-500 overflow-y-scroll">
+      <PageLoader/>
       <NotificationsPopups client:load />
       <slot />
     </main>

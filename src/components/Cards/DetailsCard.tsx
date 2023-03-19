@@ -9,7 +9,7 @@ import type { Pokemon as PrismaPokemon } from "@prisma/client";
 
 import { Switcher } from "../Switcher";
 import { BlankCard } from "./BlankCard";
-import { pushPokemon, removePokemon } from "src/hooks";
+import { pushPokemon, removePokemon, useAuth } from "src/hooks";
 
 export const DetailsCard = memo(({
   pokemon,
@@ -28,6 +28,7 @@ export const DetailsCard = memo(({
     () => !!selectedPokemons.find(({ name }) => name == pokemon.name),
     [selectedPokemons, pokemon],
   );
+  const user = useAuth();
 
   const isDeckFull = useMemo(() =>
     selectedPokemons.length + pokemonsInDeck.length == +import.meta.env.PUBLIC_DECK_MAX_SIZE
@@ -86,7 +87,7 @@ export const DetailsCard = memo(({
               onClick={() => removePokemon(pokemon)}
             />
           )
-        ) : !removeFromDeck && status == 'authenticated' && !isDeckFull && (
+        ) : !removeFromDeck && user && !isDeckFull && (
           <Add
             role="button"
             className="absolute top-2 left-2 h-7 w-7 cursor-pointer text-white hover:text-yellow-500 z-10"

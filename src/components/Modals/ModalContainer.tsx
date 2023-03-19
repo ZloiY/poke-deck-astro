@@ -10,7 +10,7 @@ export const $isModalShown = createStore(false);
 const toggleModal = createEvent<boolean>();
 $isModalShown.on(toggleModal, (_, value) => value);
 
-ReactModal.setAppElement("body");
+typeof window !== 'undefined' && ReactModal.setAppElement("body");
 
 export const ModalContainer = ({
   title = "",
@@ -50,7 +50,6 @@ export const ModalContainer = ({
 
   return (
     <ReactModal
-      parentSelector={() => document.getElementById("main")!}
       isOpen={modalState}
       overlayClassName="fixed inset-0 bg-transparent backdrop-blur z-[100] flex justify-center items-center"
       className="static outline-none"

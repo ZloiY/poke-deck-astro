@@ -14,7 +14,7 @@ export const CardsGrid = <P extends Pokemon>({
 }: {
   pokemons?: P[];
   paginationState: PaginationState;
-  children: <T extends { pokemon: Pokemon }>(pokemon: Pokemon) => ReactElement<T>
+  children: <T extends { pokemon: Pokemon }>(pokemon: Pokemon, index: number) => ReactElement<T>
 }) => {
   const loadingState = useLoadingState();
 
@@ -74,7 +74,7 @@ export const CardsGrid = <P extends Pokemon>({
       <div
         className={twMerge("w-full mt-5", cardGridStyles)}
       >
-        {pokemons?.map((pokemon) => (children(pokemon)))}
+        {pokemons?.map((pokemon, index) => (children(pokemon, index)))}
       </div>
     </div>
   );

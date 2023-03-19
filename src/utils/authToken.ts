@@ -10,7 +10,7 @@ setAuthToken.watch((token) => {
 const resetToken = createEvent();
 export const $authToken = createStore<string | null>(getAccessToken() ?? null);
 $authToken.on(setAuthToken, (_, token) => token);
-$authToken.reset(resetToken);
+$authToken.on(resetToken, () => null);
 
 export const getAuthToken = () => {
     console.log(localStorage.getItem('poke_deck_astro_token'));
