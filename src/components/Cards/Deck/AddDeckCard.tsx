@@ -1,6 +1,6 @@
 import { memo } from "react";
 
-import Add from "@icons/add-inverse.svg";
+import { ReactComponent as Add } from "@icons/add-inverse.svg";
 
 import { BlankDeckCard } from "./BlankDeckCard";
 

@@ -1,6 +1,4 @@
-import { ReactNode } from "react";
-
-import Loader from "@icons/loader.svg";
+import { ReactComponent as Loader } from "@icons/loader.svg";
 import { twMerge } from "tailwind-merge";
 
 export const BlankCard = ({

@@ -1,5 +1,5 @@
+/// <reference types="vite-plugin-svgr/client" />
 type JWTToken = string;
-
 type CreateDeckParams = {
   name: string;
   private: boolean;

@@ -139,9 +139,9 @@ export const FilledDeckCard = ({
               onMouseEnter={mouseEntered}
               onMouseLeave={mouseLeft}
             >
-              {firstSixOrLess.map((pokemon, index) => (
+              {firstSixOrLess.map((decks) => (
                 <div
-                  key={firstSixOrLess[index]?.name}
+                  key={decks.name}
                   className="absolute"
                 >
                   <PreviewCard
@@ -149,7 +149,7 @@ export const FilledDeckCard = ({
                       "w-40 h-60 pb-0 text-xl border-2 rounded-xl border-yellow-500",
                       notInteractive && "w-14 h-24 text-xs border",
                     )}
-                    pokemon={firstSixOrLess[index]!}
+                    pokemon={decks}
                     nameOnSide={isHovered}
                     notInteractive
                   />

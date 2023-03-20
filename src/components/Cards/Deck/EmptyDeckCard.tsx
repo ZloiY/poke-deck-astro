@@ -1,10 +1,10 @@
 import { memo } from "react";
 import { twMerge } from "tailwind-merge";
 
-import AddCard from "@icons/add-card.svg";
-import DeleteDeck from "@icons/delete.svg";
-import Private from "@icons/private.svg";
-import { Deck } from "@prisma/client";
+import { ReactComponent as AddCard } from "@icons/add-card.svg";
+import { ReactComponent as DeleteDeck } from "@icons/delete.svg";
+import { ReactComponent as Private } from "@icons/private.svg";
+import type { Deck } from "@prisma/client";
 
 import { BlankDeckCard } from "./BlankDeckCard";
 

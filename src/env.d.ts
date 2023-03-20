@@ -1,5 +1,4 @@
 /// <reference types="astro/client" />
-/// <reference types="vite-plugin-svgr/client" />
 
 interface ImportMetaEnv {
   NODE_ENV: "development" | "production";
