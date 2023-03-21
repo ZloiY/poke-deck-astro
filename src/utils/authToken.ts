@@ -1,7 +1,8 @@
 import { createEvent, createStore } from "effector";
 
-const getAccessToken = () => 
-localStorage.getItem('poke_deck_astro_token');
+const getAccessToken = () => !!window 
+  ? localStorage.getItem('poke_deck_astro_token')
+  : undefined;
 
 export const setAuthToken = createEvent<string>(); 
 setAuthToken.watch((token) => {
