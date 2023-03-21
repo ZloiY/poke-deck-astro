@@ -1,6 +1,6 @@
 import { createEvent, createStore } from "effector";
 
-const getAccessToken = () => !!window 
+const getAccessToken = () => typeof window !== 'undefined' 
   ? localStorage.getItem('poke_deck_astro_token')
   : undefined;
 
