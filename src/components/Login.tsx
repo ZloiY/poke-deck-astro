@@ -1,7 +1,6 @@
 import { type ReactEventHandler, useCallback, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useMessageBus } from "src/hooks";
-import { v4 } from "uuid";
 
 import { Button } from "./Button";
 import { Input } from "./Input";

@@ -9,7 +9,6 @@ export const all: APIRoute = async () => {
   const headers = new Headers({
       Allow: 'OPTIONS, GET, POST',
   })
-  console.log('called')
   return new Response(null, {
       status: 200,
       headers,
