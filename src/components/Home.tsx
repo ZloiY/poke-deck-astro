@@ -47,7 +47,7 @@ const FixedButton = ({ onClick, existingPokemonsLength }: { onClick: () => void,
   ) : null;
 };
 
-const HomeUnwrapped = ({ page, deckId, pokemons }: { pokemons: Pokemon[], deckId?: string, page: number }) => {
+const HomeUnwrapped = ({ page, deckId, search = "" }: { deckId?: string, page: number, search?: string }) => {
   const [_, { openModal }] = useModalState();
   const { flipState } = useFlipState();
   const pagination = usePagination({ page, limit: 15, totalLength: 1275,
@@ -57,6 +57,9 @@ const HomeUnwrapped = ({ page, deckId, pokemons }: { pokemons: Pokemon[], deckId
   const user = useAuth();
   const { pushMessage } = useMessageBus();
   const selectedPokemons = useStore($selectedPokemons);
+const { data: pokemons } = trpcReact.pokemon
+  .getPokemonList
+  .useQuery({ offset: page * 15, limit: 15, searchQuery: search }) 
   const { data: emptyDecks } = trpcReact.deck.getEmptyUserDecks
     .useQuery({ numberOfEmptySlots: 20 }, { enabled: !!user });
   const { data: pokemonsInDeck, refetch } = trpcReact.pokemon.getPokemonsByDeckId
