@@ -58,4 +58,4 @@ export type RouterInputs = inferRouterInputs<AppRouter>;
  **/
 export type RouterOutputs = inferRouterOutputs<AppRouter>;
 
-export { trpcReactClient, reactQueryClient, trpcAstro, trpcReact };
+export { trpcAstro, trpcReact };

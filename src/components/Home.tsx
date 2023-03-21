@@ -3,7 +3,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import type { Pokemon } from "pokenode-ts";
 
-import { ReactComponent as Check } from "@icons/check.svg";
+import { ReactComponent  as Check } from "@icons/check.svg";
 
 import { FlipCard } from "../components/Cards";
 import { CardsGrid } from "../components/CardsGrid";
@@ -14,6 +14,7 @@ import { SearchBar } from "../components/SearchBar";
 import {
     $selectedPokemons,
   resetPokemons,
+  useAuth,
   useFlipState,
   useMessageBus,
   useModalState,
@@ -53,10 +54,13 @@ const HomeUnwrapped = ({ page, deckId, pokemons }: { pokemons: Pokemon[], deckId
     onNextPage: (nextPage) => { location.assign(`/home/${nextPage}`)},
     onPrevPage: (prevPage) => { location.assign(`/home/${prevPage}`)}
   });
+  const user = useAuth();
   const { pushMessage } = useMessageBus();
   const selectedPokemons = useStore($selectedPokemons);
-  const { data: emptyDecks } = trpcReact.deck.getEmptyUserDecks.useQuery({ numberOfEmptySlots: 20 });
-  const { data: pokemonsInDeck, refetch } = trpcReact.pokemon.getPokemonsByDeckId.useQuery(deckId ?? "");
+  const { data: emptyDecks } = trpcReact.deck.getEmptyUserDecks
+    .useQuery({ numberOfEmptySlots: 20 }, { enabled: !!user });
+  const { data: pokemonsInDeck, refetch } = trpcReact.pokemon.getPokemonsByDeckId
+    .useQuery(deckId ?? "", { enabled: !!deckId });
   const { mutateAsync: createDeck, isLoading: deckCreating } =
     trpcReact.deck.createDeck.useMutation();
 
