@@ -2,7 +2,7 @@ import { defineConfig } from 'astro/config';
 import react from "@astrojs/react";
 import svgr from "vite-plugin-svgr";
 import tailwind from "@astrojs/tailwind";
-import vercel from "@astrojs/vercel/serverless";
+import vercel from "@astrojs/vercel/edge";
 import alias from '@rollup/plugin-alias';
 import path from 'path';
 //import preserveDirectives from 'rollup-plugin-preserve-directives';
