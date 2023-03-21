@@ -5,7 +5,7 @@ import tailwind from "@astrojs/tailwind";
 import vercel from "@astrojs/vercel/serverless";
 import alias from '@rollup/plugin-alias';
 import path from 'path';
-import preserveDirectives from 'rollup-plugin-preserve-directives';
+//import preserveDirectives from 'rollup-plugin-preserve-directives';
 // https://astro.build/config
 
 const projectRootDir = path.resolve('./');
