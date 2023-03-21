@@ -57,7 +57,7 @@ const HomeUnwrapped = ({ page, deckId, search = "" }: { deckId?: string, page: n
   const user = useAuth();
   const { pushMessage } = useMessageBus();
   const selectedPokemons = useStore($selectedPokemons);
-const { data: pokemons } = trpcReact.pokemon
+const { data: pokemons, isLoading } = trpcReact.pokemon
   .getPokemonList
   .useQuery({ offset: page * 15, limit: 15, searchQuery: search }) 
   const { data: emptyDecks } = trpcReact.deck.getEmptyUserDecks
@@ -129,7 +129,7 @@ const { data: pokemons } = trpcReact.pokemon
         onNextPage={pagination.goToNextPage}
         onPrevPage={pagination.goToPrevPage}
       />
-       <Loader isLoading={false}>
+       <Loader isLoading={isLoading}>
        <AnimatePresence>
           <CardsGrid
             paginationState={pagination.paginationState}
