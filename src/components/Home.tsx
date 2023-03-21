@@ -3,7 +3,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import type { Pokemon } from "pokenode-ts";
 
-import { ReactComponent as Check } from "@icons/check.svg";
+import { ReactComponent  as Check } from "@icons/check.svg";
 
 import { FlipCard } from "../components/Cards";
 import { CardsGrid } from "../components/CardsGrid";
@@ -14,6 +14,7 @@ import { SearchBar } from "../components/SearchBar";
 import {
     $selectedPokemons,
   resetPokemons,
+  useAuth,
   useFlipState,
   useMessageBus,
   useModalState,
@@ -46,17 +47,23 @@ const FixedButton = ({ onClick, existingPokemonsLength }: { onClick: () => void,
   ) : null;
 };
 
-const HomeUnwrapped = ({ page, deckId, pokemons }: { pokemons: Pokemon[], deckId?: string, page: number }) => {
+const HomeUnwrapped = ({ page, deckId, search = "" }: { deckId?: string, page: number, search?: string }) => {
   const [_, { openModal }] = useModalState();
   const { flipState } = useFlipState();
   const pagination = usePagination({ page, limit: 15, totalLength: 1275,
     onNextPage: (nextPage) => { location.assign(`/home/${nextPage}`)},
     onPrevPage: (prevPage) => { location.assign(`/home/${prevPage}`)}
   });
+  const user = useAuth();
   const { pushMessage } = useMessageBus();
   const selectedPokemons = useStore($selectedPokemons);
-  const { data: emptyDecks } = trpcReact.deck.getEmptyUserDecks.useQuery({ numberOfEmptySlots: 20 });
-  const { data: pokemonsInDeck, refetch } = trpcReact.pokemon.getPokemonsByDeckId.useQuery(deckId ?? "");
+const { data: pokemons, isLoading } = trpcReact.pokemon
+  .getPokemonList
+  .useQuery({ offset: page * 15, limit: 15, searchQuery: search }) 
+  const { data: emptyDecks } = trpcReact.deck.getEmptyUserDecks
+    .useQuery({ numberOfEmptySlots: 20 }, { enabled: !!user });
+  const { data: pokemonsInDeck, refetch } = trpcReact.pokemon.getPokemonsByDeckId
+    .useQuery(deckId ?? "", { enabled: !!deckId });
   const { mutateAsync: createDeck, isLoading: deckCreating } =
     trpcReact.deck.createDeck.useMutation();
 
@@ -122,7 +129,7 @@ const HomeUnwrapped = ({ page, deckId, pokemons }: { pokemons: Pokemon[], deckId
         onNextPage={pagination.goToNextPage}
         onPrevPage={pagination.goToPrevPage}
       />
-       <Loader isLoading={false}>
+       <Loader isLoading={isLoading}>
        <AnimatePresence>
           <CardsGrid
             paginationState={pagination.paginationState}
