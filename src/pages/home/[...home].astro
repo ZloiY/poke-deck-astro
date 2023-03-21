@@ -1,6 +1,6 @@
 ---
 import HeaderLayout from "src/layouts/HeaderLayout.astro";
-import { Home } from "../components/Home"; 
+import { Home } from "../../components/Home"; 
 import { getQueryParams } from "src/utils/queryParser";
 import { z } from "zod";
 
@@ -12,8 +12,7 @@ const queryShema = z.object({
 
 const url = Astro.url;
 const queryParams = getQueryParams<typeof queryShema>(url.href ?? "", queryShema); 
-const page = z.number().parse(+(home?.split("/")[1] ?? "0"));
-
+const page = z.number().parse(+(home ?? '0'));
 ---
 <HeaderLayout title="PokeDeck home" showFlip={true}>
   <Home page={page} search={queryParams?.search} deckId={queryParams?.deckId} client:only/>
