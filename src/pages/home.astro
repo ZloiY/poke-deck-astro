@@ -14,9 +14,10 @@ const queryShema = z.object({
 const url = Astro.url;
 const queryParams = getQueryParams<typeof queryShema>(url.href ?? "", queryShema); 
 const page = z.number().parse(+(home?.split("/")[1] ?? "0"));
-const pokemons = await trpcAstro.pokemon
-  .getPokemonList
-  .query({ offset: page * 15, limit: 15, searchQuery: queryParams?.search ?? "" }) 
+//const pokemons = await trpcAstro.pokemon
+//  .getPokemonList
+//  .query({ offset: page * 15, limit: 15, searchQuery: queryParams?.search ?? "" }) 
+const pokemons = [];
 
 ---
 <HeaderLayout title="PokeDeck home" showFlip={true}>
