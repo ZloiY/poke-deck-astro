@@ -3,8 +3,6 @@ import react from "@astrojs/react";
 import svgr from "vite-plugin-svgr";
 import tailwind from "@astrojs/tailwind";
 import vercel from "@astrojs/vercel/serverless";
-import replace from '@rollup/plugin-replace';
-import commonjs from '@rollup/plugin-commonjs';
 import alias from '@rollup/plugin-alias';
 import path from 'path';
 import preserveDirectives from 'rollup-plugin-preserve-directives';
@@ -23,12 +21,6 @@ export default defineConfig({
             ext: 'jsx'
           },
           icon: true,
-        }),
-        commonjs({
-          exclude: [
-           '**/use-sync-external-store*/**/*.*',
-           '**/react*/**/*.*',
-          ]
         }),
         alias({
           entries: [
