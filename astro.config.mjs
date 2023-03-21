@@ -14,6 +14,9 @@ export default defineConfig({
   output: 'server',
   integrations: [react(), tailwind()],
   vite: {
+    ssr: {
+      external: ['react-select']
+    },
     plugins: [
         svgr({
           svgrOptions: {

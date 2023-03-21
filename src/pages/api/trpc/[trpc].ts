@@ -18,6 +18,6 @@ export const all: APIRoute = ({ request }) => {
               `❌ tRPC failed on ${path ?? "<no-path>"}: ${error.message}`,
             );
           }
-        : ({ error }) => console.log('Something wrong'),
+        : ({ error }) => console.log("Something wrong"),
   });
 };

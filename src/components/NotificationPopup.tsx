@@ -1,5 +1,5 @@
-import { useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
+import { useEffect } from "react";
 import { twMerge } from "tailwind-merge";
 
 import { ReactComponent as Close } from "@icons/close.svg";
@@ -22,7 +22,7 @@ const Notification = ({ message }: { message: Message }) => {
   return (
     <div
       className={twMerge(
-        "w-80 rounded-3xl text-white p-4 z-[60] backdrop-blur-md",
+        "w-80 rounded-3xl text-white p-4 z-[110] backdrop-blur-md",
         message.state == "Success"
           ? "bg-lime-400/70 shadow-[0px_0px_15px_4px] shadow-lime-500"
           : "bg-red-600/70 shadow-[0px_0px_15px_4px] shadow-red-700",
@@ -43,7 +43,7 @@ const Notification = ({ message }: { message: Message }) => {
 export const NotificationsPopups = () => {
   const { messages } = useMessageBus();
   return (
-    <div className="absolute top-5 right-8 flex flex-col gap-5">
+    <div className="absolute top-5 right-8 flex flex-col gap-5 z-[110]">
       <AnimatePresence>
         {messages.map((message) => (
           <motion.div
@@ -51,7 +51,7 @@ export const NotificationsPopups = () => {
             initial={{ opacity: 0, scale: 0 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0 }}
-            >
+          >
             <Notification message={message} />
           </motion.div>
         ))}

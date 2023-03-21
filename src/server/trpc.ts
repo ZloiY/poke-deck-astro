@@ -18,8 +18,9 @@
  */
 import { PokemonClient } from "pokenode-ts";
 import { checkHeader, checkToken } from "src/utils/authCheck";
+import { setAuthToken } from "src/utils/authToken";
 import superjson from "superjson";
-import { setErrorMap, ZodError } from "zod";
+import { ZodError, setErrorMap } from "zod";
 
 /**
  * 2. INITIALIZATION
@@ -31,7 +32,6 @@ import { TRPCError, initTRPC } from "@trpc/server";
 import type { FetchCreateContextFnOptions } from "@trpc/server/adapters/fetch";
 
 import { prisma } from "./db";
-import { setAuthToken } from "src/utils/authToken";
 
 const pokemonApi = new PokemonClient();
 
@@ -69,7 +69,7 @@ export const createTRPCContext = async (opts: FetchCreateContextFnOptions) => {
   let session = checkHeader(authorization);
   if (!session) {
     try {
-      const url = import.meta.env.VERCEL_URL 
+      const url = import.meta.env.VERCEL_URL
         ? `https://${import.meta.env.VERCEL_URL}/api/refresh`
         : `http://localhost:${import.meta.env.PORT ?? 3000}/api/refresh`;
       const response = await fetch(url, {
@@ -77,12 +77,12 @@ export const createTRPCContext = async (opts: FetchCreateContextFnOptions) => {
         headers: req.headers,
       });
       if (response.status == 200) {
-        const token = await response.json()  
+        const token = await response.json();
         setAuthToken(token);
         session = checkToken(token);
       }
     } catch (err) {
-        console.log("couldn't fetch")
+      console.log("couldn't fetch");
     }
   }
   return createInnerTRPCContext({

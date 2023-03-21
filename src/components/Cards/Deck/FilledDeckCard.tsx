@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { trpcReact } from "src/api";
 import { twMerge } from "tailwind-merge";
 
 import { ReactComponent as Add } from "@icons/add-card.svg";
@@ -9,7 +10,6 @@ import type { Deck } from "@prisma/client";
 import { Loader } from "../../Loader";
 import { PreviewCard } from "../PreviewCard";
 import { BlankDeckCard } from "./BlankDeckCard";
-import { trpcReact } from "src/api";
 
 const getFirstSix = <T extends any>(arr: T[]): T[] => {
   const counter = 6;
@@ -43,61 +43,61 @@ export const FilledDeckCard = ({
     [pokemons],
   );
 
-//  const [animatedCards, animate] = useSprings(
-//    firstSixOrLess.length,
-//    (index) => ({
-//      from: {
-//        top: `${index * (notInteractive ? -4 : -10)}px`,
-//        left: `0px`,
-//        rotate: `${index * getRandomShift()}deg`,
-//        zIndex: 1,
-//      },
-//      immediate: true,
-//    }),
-//    [firstSixOrLess, notInteractive],
-//  );
+  //  const [animatedCards, animate] = useSprings(
+  //    firstSixOrLess.length,
+  //    (index) => ({
+  //      from: {
+  //        top: `${index * (notInteractive ? -4 : -10)}px`,
+  //        left: `0px`,
+  //        rotate: `${index * getRandomShift()}deg`,
+  //        zIndex: 1,
+  //      },
+  //      immediate: true,
+  //    }),
+  //    [firstSixOrLess, notInteractive],
+  //  );
 
   const mouseEntered = () => {
-//    animate.start((index) => ({
-//      to: {
-//        top: `${
-//          (-1 * index ** 2 + (firstSixOrLess.length - 1) * index) * -15
-//        }px`,
-//        left: `${-150 + (index / (firstSixOrLess.length - 1)) * 300}px`,
-//        rotate: `${
-//          (-60 * firstSixOrLess.length) / 6 +
-//          ((index / (firstSixOrLess.length - 1)) *
-//            120 *
-//            firstSixOrLess.length) /
-//            6
-//        }deg`,
-//        zIndex: 2,
-//      },
-//      config: config.wobbly,
-//    }));
+    //    animate.start((index) => ({
+    //      to: {
+    //        top: `${
+    //          (-1 * index ** 2 + (firstSixOrLess.length - 1) * index) * -15
+    //        }px`,
+    //        left: `${-150 + (index / (firstSixOrLess.length - 1)) * 300}px`,
+    //        rotate: `${
+    //          (-60 * firstSixOrLess.length) / 6 +
+    //          ((index / (firstSixOrLess.length - 1)) *
+    //            120 *
+    //            firstSixOrLess.length) /
+    //            6
+    //        }deg`,
+    //        zIndex: 2,
+    //      },
+    //      config: config.wobbly,
+    //    }));
     toggleHovered(true);
   };
 
   const mouseLeft = () => {
-//    animate.start((index) => ({
-//      to: {
-//        top: `${index * -10}px`,
-//        left: `0px`,
-//        rotate: `${index * getRandomShift()}deg`,
-//        zIndex: 1,
-//      },
-//      config: config.stiff,
-//    }));
+    //    animate.start((index) => ({
+    //      to: {
+    //        top: `${index * -10}px`,
+    //        left: `0px`,
+    //        rotate: `${index * getRandomShift()}deg`,
+    //        zIndex: 1,
+    //      },
+    //      config: config.stiff,
+    //    }));
     toggleHovered(false);
   };
 
   const goToTheDeck = () => {
-//    if (session.data?.user?.id == deck.userId) {
-//      router.push({
-//        pathname: "/pokemons/[deckId]",
-//        query: { deckId: deck.id },
-//      });
-//    }
+    //    if (session.data?.user?.id == deck.userId) {
+    //      router.push({
+    //        pathname: "/pokemons/[deckId]",
+    //        query: { deckId: deck.id },
+    //      });
+    //    }
   };
 
   return (
@@ -140,10 +140,7 @@ export const FilledDeckCard = ({
               onMouseLeave={mouseLeft}
             >
               {firstSixOrLess.map((decks) => (
-                <div
-                  key={decks.name}
-                  className="absolute"
-                >
+                <div key={decks.name} className="absolute">
                   <PreviewCard
                     className={twMerge(
                       "w-40 h-60 pb-0 text-xl border-2 rounded-xl border-yellow-500",
@@ -163,7 +160,7 @@ export const FilledDeckCard = ({
               {deck.name}
             </p>
             <p className={twMerge("text-xl", notInteractive && "text-sm")}>
-              {deck.deckLength}/{process.env.NEXT_PUBLIC_DECK_MAX_SIZE}
+              {deck.deckLength}/{import.meta.env.PUBLIC_DECK_MAX_SIZE}
             </p>
           </>
         </Loader>

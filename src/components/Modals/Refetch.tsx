@@ -5,12 +5,17 @@ import { ReactComponent as Loader } from "@icons/loader.svg";
 
 import { ModalContainer } from "./ModalContainer";
 
-const refetchState= createStore(false)
+const refetchState = createStore(false);
 const toggleModal = createEvent<boolean>();
 refetchState.on(toggleModal, (_, value) => value);
 
-export const Refetch = ({ isRefetching, anotherState }: { isRefetching: boolean, anotherState?: typeof refetchState}) => {
-
+export const Refetch = ({
+  isRefetching,
+  anotherState,
+}: {
+  isRefetching: boolean;
+  anotherState?: typeof refetchState;
+}) => {
   useEffect(() => {
     toggleModal(isRefetching);
   }, [isRefetching]);
