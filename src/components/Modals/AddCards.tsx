@@ -97,6 +97,7 @@ export const AddCards = ({
                 )}
                 {(userDecks?.length ?? 0) > 0 && (
                   <Select
+                    selectedItem={selectedDeck}
                     className="w-64"
                     placeholder="Select deck..."
                     label="Select deck where you want to add Pokemons"
