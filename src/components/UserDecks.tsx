@@ -76,10 +76,6 @@ const UnwrappedUserDecks = () => {
     refetch();
   };
 
-  const goToDeck = (id: string) => {
-    location.assign(`/pokemons/${id}`);
-  };
-
   const addPokemons = (deckId: string) => {
     location.assign(`/home?deckId=${deckId}`);
   };
@@ -125,7 +121,6 @@ const UnwrappedUserDecks = () => {
                   }}
                 >
                   <DeckCard
-                    onClick={goToDeck}
                     deck={userDecks[virtualItem.index]!}
                     addCard={addPokemons}
                     removeDeck={remove}

@@ -68,12 +68,7 @@ export const FilledDeckCard = ({
   };
 
   const goToTheDeck = () => {
-    //    if (session.data?.user?.id == deck.userId) {
-    //      router.push({
-    //        pathname: "/pokemons/[deckId]",
-    //        query: { deckId: deck.id },
-    //      });
-    //    }
+    location.assign(`/pokemons/${deck.id}`);
   };
 
   return (
