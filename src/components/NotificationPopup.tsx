@@ -1,4 +1,4 @@
-import { AnimatePresence, motion } from "framer-motion";
+import { LazyMotion, AnimatePresence, m, domAnimation } from "framer-motion";
 import { useEffect } from "react";
 import { twMerge } from "tailwind-merge";
 
@@ -43,19 +43,21 @@ const Notification = ({ message }: { message: Message }) => {
 export const NotificationsPopups = () => {
   const { messages } = useMessageBus();
   return (
-    <div className="absolute top-5 right-8 flex flex-col gap-5 z-[110]">
-      <AnimatePresence>
-        {messages.map((message) => (
-          <motion.div
-            key={message.id}
-            initial={{ opacity: 0, scale: 0 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0 }}
-          >
-            <Notification message={message} />
-          </motion.div>
-        ))}
-      </AnimatePresence>
-    </div>
+    <LazyMotion features={domAnimation}>
+      <div className="absolute top-5 right-8 flex flex-col gap-5 z-[110]">
+        <AnimatePresence>
+          {messages.map((message) => (
+            <m.div
+              key={message.id}
+              initial={{ opacity: 0, scale: 0 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0 }}
+            >
+              <Notification message={message} />
+            </m.div>
+          ))}
+        </AnimatePresence>
+      </div>
+    </LazyMotion>
   );
 };
