@@ -1,4 +1,4 @@
-import { LazyMotion, AnimatePresence, m, domAnimation } from "framer-motion";
+import { AnimatePresence, LazyMotion, domAnimation, m } from "framer-motion";
 import { useEffect } from "react";
 import { twMerge } from "tailwind-merge";
 

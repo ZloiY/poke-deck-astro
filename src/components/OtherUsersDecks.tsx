@@ -107,4 +107,6 @@ const UnwrappedOtherUserDecks = () => {
   );
 };
 
-export const OtherUsersDecks = TRPCWrapper<Parameters<typeof UnwrappedOtherUserDecks>>(UnwrappedOtherUserDecks);
+export const OtherUsersDecks = TRPCWrapper<
+  Parameters<typeof UnwrappedOtherUserDecks>
+>(UnwrappedOtherUserDecks);
