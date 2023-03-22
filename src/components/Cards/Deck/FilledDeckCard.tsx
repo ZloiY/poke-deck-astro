@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
-import { trpcReact } from "src/api";
 import { twMerge } from "tailwind-merge";
+import { useMotionValue, motion } from "framer-motion";
 
 import { ReactComponent as Add } from "@icons/add-card.svg";
 import { ReactComponent as Delete } from "@icons/delete.svg";
@@ -10,6 +10,7 @@ import type { Deck } from "@prisma/client";
 import { Loader } from "../../Loader";
 import { PreviewCard } from "../PreviewCard";
 import { BlankDeckCard } from "./BlankDeckCard";
+import { trpcReact } from "src/api";
 
 const getFirstSix = <T extends any>(arr: T[]): T[] => {
   const counter = 6;
@@ -42,52 +43,24 @@ export const FilledDeckCard = ({
     () => (pokemons ? getFirstSix(pokemons) : []),
     [pokemons],
   );
+  
+  const translateY = (index: number) => isHovered
+    ? (-1 * index ** 2 + (firstSixOrLess.length - 1) * index) * -15
+    : index * (notInteractive ? -4 : -10)
 
-  //  const [animatedCards, animate] = useSprings(
-  //    firstSixOrLess.length,
-  //    (index) => ({
-  //      from: {
-  //        top: `${index * (notInteractive ? -4 : -10)}px`,
-  //        left: `0px`,
-  //        rotate: `${index * getRandomShift()}deg`,
-  //        zIndex: 1,
-  //      },
-  //      immediate: true,
-  //    }),
-  //    [firstSixOrLess, notInteractive],
-  //  );
+  const translateX = (index: number) => isHovered
+    ? -150 + (index / (firstSixOrLess.length - 1)) * 300
+    : 0;
+
+  const rotate = (index: number) => isHovered
+    ? (-60 *firstSixOrLess.length) / 6 + ((index / (firstSixOrLess.length - 1)) * 120 * firstSixOrLess.length) / 6
+    : index * getRandomShift();
 
   const mouseEntered = () => {
-    //    animate.start((index) => ({
-    //      to: {
-    //        top: `${
-    //          (-1 * index ** 2 + (firstSixOrLess.length - 1) * index) * -15
-    //        }px`,
-    //        left: `${-150 + (index / (firstSixOrLess.length - 1)) * 300}px`,
-    //        rotate: `${
-    //          (-60 * firstSixOrLess.length) / 6 +
-    //          ((index / (firstSixOrLess.length - 1)) *
-    //            120 *
-    //            firstSixOrLess.length) /
-    //            6
-    //        }deg`,
-    //        zIndex: 2,
-    //      },
-    //      config: config.wobbly,
-    //    }));
     toggleHovered(true);
   };
 
   const mouseLeft = () => {
-    //    animate.start((index) => ({
-    //      to: {
-    //        top: `${index * -10}px`,
-    //        left: `0px`,
-    //        rotate: `${index * getRandomShift()}deg`,
-    //        zIndex: 1,
-    //      },
-    //      config: config.stiff,
-    //    }));
     toggleHovered(false);
   };
 
@@ -139,8 +112,17 @@ export const FilledDeckCard = ({
               onMouseEnter={mouseEntered}
               onMouseLeave={mouseLeft}
             >
-              {firstSixOrLess.map((decks) => (
-                <div key={decks.name} className="absolute">
+              {firstSixOrLess.map((decks, index) => (
+                <motion.div
+                  key={decks.name}
+                  className="absolute"
+                  animate={{
+                    y: translateY(index), 
+                    x: translateX(index), 
+                    rotate: rotate(index),
+                    zIndex: isHovered ? 2 : 1,
+                  }}
+                >
                   <PreviewCard
                     className={twMerge(
                       "w-40 h-60 pb-0 text-xl border-2 rounded-xl border-yellow-500",
@@ -150,7 +132,7 @@ export const FilledDeckCard = ({
                     nameOnSide={isHovered}
                     notInteractive
                   />
-                </div>
+                </motion.div>
               ))}
             </div>
             {deck.username && (
