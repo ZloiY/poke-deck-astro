@@ -102,7 +102,7 @@ export const AddCards = ({
                     placeholder="Select deck..."
                     label="Select deck where you want to add Pokemons"
                     onSelect={setSelectedDeck}
-                    showItemName={(deck) => deck.name} 
+                    showItemName={(deck) => deck.name}
                     items={userDecks}
                   />
                 )}

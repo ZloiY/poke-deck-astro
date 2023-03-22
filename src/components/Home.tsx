@@ -1,5 +1,5 @@
 import { useStore } from "effector-react";
-import { AnimatePresence, m, LazyMotion, domAnimation } from "framer-motion";
+import { AnimatePresence, LazyMotion, domAnimation, m } from "framer-motion";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { trpcReact } from "src/api";
 
@@ -161,34 +161,34 @@ const HomeUnwrapped = ({
         onPrevPage={pagination.goToPrevPage}
       />
       <Loader isLoading={isLoading}>
-       <LazyMotion features={domAnimation}>
-        <AnimatePresence>
-          <CardsGrid
-            paginationState={pagination.paginationState}
-            pokemons={pokemons}
-          >
-            {(pokemon, index) => (
-              <m.div
-                key={pokemon.id}
-                initial={{ opacity: 0, scale: 0 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{
-                  duration: 0.1,
-                  type: "spring",
-                  stiffness: 80,
-                  delay: index * 0.2,
-                }}
-              >
-                <FlipCard
-                  pokemon={pokemon}
-                  selectedPokemons={selectedPokemons}
-                  pokemonsInDeck={pokemonsInDeck}
-                  keepFlipped={flipState}
-                />
-              </m.div>
-            )}
-          </CardsGrid>
-        </AnimatePresence>
+        <LazyMotion features={domAnimation}>
+          <AnimatePresence>
+            <CardsGrid
+              paginationState={pagination.paginationState}
+              pokemons={pokemons}
+            >
+              {(pokemon, index) => (
+                <m.div
+                  key={pokemon.id}
+                  initial={{ opacity: 0, scale: 0 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{
+                    duration: 0.1,
+                    type: "spring",
+                    stiffness: 80,
+                    delay: index * 0.2,
+                  }}
+                >
+                  <FlipCard
+                    pokemon={pokemon}
+                    selectedPokemons={selectedPokemons}
+                    pokemonsInDeck={pokemonsInDeck}
+                    keepFlipped={flipState}
+                  />
+                </m.div>
+              )}
+            </CardsGrid>
+          </AnimatePresence>
         </LazyMotion>
       </Loader>
     </div>

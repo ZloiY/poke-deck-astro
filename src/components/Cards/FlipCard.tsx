@@ -1,4 +1,4 @@
-import { m, domAnimation, LazyMotion } from "framer-motion";
+import { LazyMotion, domAnimation, m } from "framer-motion";
 import { memo, useEffect, useMemo, useState } from "react";
 
 import { DetailsCard } from "./DetailsCard";
@@ -37,43 +37,53 @@ export const FlipCard = memo(
     };
 
     return (
-    <LazyMotion features={domAnimation}>
-      <div
-        className="relative"
-        onMouseEnter={() => toggleHovered("Details")}
-        onMouseLeave={unHover}
-      >
-        <m.div
-          className="z-10"
-          initial={{ opacity: 1, rotateY: 0 }}
-          animate={{
-            opacity: isHovered == "Preview" ? 1 : 0,
-            perspective: "600px",
-            rotateY: isHovered == "Details" ? 180 : 0,
-          }}
-          transition={{ duration: 0.5, type: "spring", mass: 2, stiffness: 60 }}
+      <LazyMotion features={domAnimation}>
+        <div
+          className="relative"
+          onMouseEnter={() => toggleHovered("Details")}
+          onMouseLeave={unHover}
         >
-          <PreviewCard pokemon={pokemon} />
-        </m.div>
-        <m.div
-          className="absolute top-0 z-30"
-          initial={{ opacity: 0, rotateY: 180 }}
-          animate={{
-            opacity: isHovered == "Details" ? 1 : 0,
-            perspective: "600px",
-            rotateY: isHovered == "Preview" ? 180 : 0,
-          }}
-          transition={{ duration: 0.5, type: "spring", mass: 2, stiffness: 60 }}
-        >
-          <DetailsCard
-            pokemon={pokemon}
-            selectedPokemons={selectedPokemons}
-            isSelected={isSelected}
-            pokemonsInDeck={pokemonsInDeck}
-            removeFromDeck={removeFromDeck}
-          />
-        </m.div>
-      </div>
+          <m.div
+            className="z-10"
+            initial={{ opacity: 1, rotateY: 0 }}
+            animate={{
+              opacity: isHovered == "Preview" ? 1 : 0,
+              perspective: "600px",
+              rotateY: isHovered == "Details" ? 180 : 0,
+            }}
+            transition={{
+              duration: 0.5,
+              type: "spring",
+              mass: 2,
+              stiffness: 60,
+            }}
+          >
+            <PreviewCard pokemon={pokemon} />
+          </m.div>
+          <m.div
+            className="absolute top-0 z-30"
+            initial={{ opacity: 0, rotateY: 180 }}
+            animate={{
+              opacity: isHovered == "Details" ? 1 : 0,
+              perspective: "600px",
+              rotateY: isHovered == "Preview" ? 180 : 0,
+            }}
+            transition={{
+              duration: 0.5,
+              type: "spring",
+              mass: 2,
+              stiffness: 60,
+            }}
+          >
+            <DetailsCard
+              pokemon={pokemon}
+              selectedPokemons={selectedPokemons}
+              isSelected={isSelected}
+              pokemonsInDeck={pokemonsInDeck}
+              removeFromDeck={removeFromDeck}
+            />
+          </m.div>
+        </div>
       </LazyMotion>
     );
   },

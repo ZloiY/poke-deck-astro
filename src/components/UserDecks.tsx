@@ -1,4 +1,4 @@
-import { useMemo, useRef, useEffect } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { trpcReact } from "src/api";
 
 import { useVirtualizer } from "@tanstack/react-virtual";
@@ -15,13 +15,19 @@ const UnwrappedUserDecks = () => {
   const createDeck = trpcReact.deck.createDeck.useMutation();
   const removeDeck = trpcReact.deck.removeUserDeck.useMutation();
   const parent = useRef(null);
-  const { data, hasNextPage, fetchNextPage, isFetchingNextPage, isLoading, refetch } =
-    trpcReact.deck.getUserDecks.useInfiniteQuery(
-      { limit: 4 },
-      {
-        getNextPageParam: (last) => last.nextCursor,
-      },
-    );
+  const {
+    data,
+    hasNextPage,
+    fetchNextPage,
+    isFetchingNextPage,
+    isLoading,
+    refetch,
+  } = trpcReact.deck.getUserDecks.useInfiniteQuery(
+    { limit: 4 },
+    {
+      getNextPageParam: (last) => last.nextCursor,
+    },
+  );
   const userDecks = useMemo(
     () => data?.pages.flatMap((group) => group.decks) ?? [],
     [data?.pages],
@@ -94,10 +100,9 @@ const UnwrappedUserDecks = () => {
           ref={parent}
           className="w-full h-[520px] flex gap-5 overflow-x-scroll overflow-y-hidden pb-4 scrollbar-thin scrollbar-thumb-purple-900 scrollbar-track-transparent"
         >
-        {userDecks?.length !=
-            +import.meta.env.PUBLIC_USER_MAX_DECKS && (
-           <AddDeckCard onClick={openModal}/>
-        )}
+          {userDecks?.length != +import.meta.env.PUBLIC_USER_MAX_DECKS && (
+            <AddDeckCard onClick={openModal} />
+          )}
           <Loader className="w-60 h-60" isLoading={isLoading}>
             <div
               className="h-full relative text-center text-3xl"
@@ -106,7 +111,7 @@ const UnwrappedUserDecks = () => {
               {virtualColumn.getVirtualItems().map((virtualItem) => (
                 <div
                   key={virtualItem.index}
-                   className="h-full"
+                  className="h-full"
                   style={{
                     position: "absolute",
                     top: 0,

@@ -1,6 +1,7 @@
-import { useMemo, useState } from "react";
-import { twMerge } from "tailwind-merge";
 import { LazyMotion, domAnimation, m } from "framer-motion";
+import { useMemo, useState } from "react";
+import { trpcReact } from "src/api";
+import { twMerge } from "tailwind-merge";
 
 import { ReactComponent as Add } from "@icons/add-card.svg";
 import { ReactComponent as Delete } from "@icons/delete.svg";
@@ -10,7 +11,6 @@ import type { Deck } from "@prisma/client";
 import { Loader } from "../../Loader";
 import { PreviewCard } from "../PreviewCard";
 import { BlankDeckCard } from "./BlankDeckCard";
-import { trpcReact } from "src/api";
 
 const getFirstSix = <T extends any>(arr: T[]): T[] => {
   const counter = 6;
@@ -43,18 +43,21 @@ export const FilledDeckCard = ({
     () => (pokemons ? getFirstSix(pokemons) : []),
     [pokemons],
   );
-  
-  const translateY = (index: number) => isHovered
-    ? (-1 * index ** 2 + (firstSixOrLess.length - 1) * index) * -15
-    : index * (notInteractive ? -4 : -10)
 
-  const translateX = (index: number) => isHovered
-    ? -150 + (index / (firstSixOrLess.length - 1)) * 300
-    : 0;
+  const translateY = (index: number) =>
+    isHovered
+      ? (-1 * index ** 2 + (firstSixOrLess.length - 1) * index) * -15
+      : index * (notInteractive ? -4 : -10);
 
-  const rotate = (index: number) => isHovered
-    ? (-60 *firstSixOrLess.length) / 6 + ((index / (firstSixOrLess.length - 1)) * 120 * firstSixOrLess.length) / 6
-    : index * getRandomShift();
+  const translateX = (index: number) =>
+    isHovered ? -150 + (index / (firstSixOrLess.length - 1)) * 300 : 0;
+
+  const rotate = (index: number) =>
+    isHovered
+      ? (-60 * firstSixOrLess.length) / 6 +
+        ((index / (firstSixOrLess.length - 1)) * 120 * firstSixOrLess.length) /
+          6
+      : index * getRandomShift();
 
   const mouseEntered = () => {
     toggleHovered(true);
@@ -65,12 +68,7 @@ export const FilledDeckCard = ({
   };
 
   const goToTheDeck = () => {
-    //    if (session.data?.user?.id == deck.userId) {
-    //      router.push({
-    //        pathname: "/pokemons/[deckId]",
-    //        query: { deckId: deck.id },
-    //      });
-    //    }
+    location.assign(`/pokemons/${deck.id}`);
   };
 
   return (
@@ -117,8 +115,8 @@ export const FilledDeckCard = ({
                   key={decks.name}
                   className="absolute"
                   animate={{
-                    y: translateY(index), 
-                    x: translateX(index), 
+                    y: translateY(index),
+                    x: translateX(index),
                     rotate: rotate(index),
                     zIndex: isHovered ? 2 : 1,
                   }}

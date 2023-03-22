@@ -1,0 +1,10 @@
+---
+import HeaderLayout from "src/layouts/HeaderLayout.astro";
+import { PokemonsDeck } from "src/components/PokemonsDeck";
+
+const { deckId } = Astro.params;
+
+---
+<HeaderLayout title="PokeDeck User Deck" showFlip>
+  <PokemonsDeck deckId={deckId ?? ""} client:only/>
+</HeaderLayout>
