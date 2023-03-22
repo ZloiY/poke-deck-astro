@@ -3,7 +3,7 @@ type JWTToken = string;
 type CreateDeckParams = {
   name: string;
   private: boolean;
-}
+};
 
 type Session = {
   id: string;

@@ -36,7 +36,7 @@ export function Login() {
           const { access_token, ...message } = await response.json();
           pushMessage(message);
           if (response.ok) {
-            localStorage.setItem('poke_deck_astro_token', access_token);
+            localStorage.setItem("poke_deck_astro_token", access_token);
             location.assign("/home");
           } else {
             toggleLogin(false);
@@ -103,4 +103,3 @@ export function Login() {
     </div>
   );
 }
-

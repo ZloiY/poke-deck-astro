@@ -6,7 +6,9 @@ export const post: APIRoute = ({ request }) => {
   const authorizationToken = request.headers.get("Authorization");
   const access_token = authorizationToken?.split(" ")[1];
   if (access_token) {
-    const decodedToken = jwt.verify(access_token, import.meta.env.AUTH_SECRET, { ignoreExpiration: true });
+    const decodedToken = jwt.verify(access_token, import.meta.env.AUTH_SECRET, {
+      ignoreExpiration: true,
+    });
     const validatedToken = validateToken(decodedToken);
     if (validatedToken.success) {
       const refreshToken = jwt.verify(

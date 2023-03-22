@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import { twMerge } from "tailwind-merge";
+import { LazyMotion, domAnimation, m } from "framer-motion";
 
 import { ReactComponent as Add } from "@icons/add-card.svg";
 import { ReactComponent as Delete } from "@icons/delete.svg";
@@ -42,62 +43,34 @@ export const FilledDeckCard = ({
     () => (pokemons ? getFirstSix(pokemons) : []),
     [pokemons],
   );
+  
+  const translateY = (index: number) => isHovered
+    ? (-1 * index ** 2 + (firstSixOrLess.length - 1) * index) * -15
+    : index * (notInteractive ? -4 : -10)
 
-//  const [animatedCards, animate] = useSprings(
-//    firstSixOrLess.length,
-//    (index) => ({
-//      from: {
-//        top: `${index * (notInteractive ? -4 : -10)}px`,
-//        left: `0px`,
-//        rotate: `${index * getRandomShift()}deg`,
-//        zIndex: 1,
-//      },
-//      immediate: true,
-//    }),
-//    [firstSixOrLess, notInteractive],
-//  );
+  const translateX = (index: number) => isHovered
+    ? -150 + (index / (firstSixOrLess.length - 1)) * 300
+    : 0;
+
+  const rotate = (index: number) => isHovered
+    ? (-60 *firstSixOrLess.length) / 6 + ((index / (firstSixOrLess.length - 1)) * 120 * firstSixOrLess.length) / 6
+    : index * getRandomShift();
 
   const mouseEntered = () => {
-//    animate.start((index) => ({
-//      to: {
-//        top: `${
-//          (-1 * index ** 2 + (firstSixOrLess.length - 1) * index) * -15
-//        }px`,
-//        left: `${-150 + (index / (firstSixOrLess.length - 1)) * 300}px`,
-//        rotate: `${
-//          (-60 * firstSixOrLess.length) / 6 +
-//          ((index / (firstSixOrLess.length - 1)) *
-//            120 *
-//            firstSixOrLess.length) /
-//            6
-//        }deg`,
-//        zIndex: 2,
-//      },
-//      config: config.wobbly,
-//    }));
     toggleHovered(true);
   };
 
   const mouseLeft = () => {
-//    animate.start((index) => ({
-//      to: {
-//        top: `${index * -10}px`,
-//        left: `0px`,
-//        rotate: `${index * getRandomShift()}deg`,
-//        zIndex: 1,
-//      },
-//      config: config.stiff,
-//    }));
     toggleHovered(false);
   };
 
   const goToTheDeck = () => {
-//    if (session.data?.user?.id == deck.userId) {
-//      router.push({
-//        pathname: "/pokemons/[deckId]",
-//        query: { deckId: deck.id },
-//      });
-//    }
+    //    if (session.data?.user?.id == deck.userId) {
+    //      router.push({
+    //        pathname: "/pokemons/[deckId]",
+    //        query: { deckId: deck.id },
+    //      });
+    //    }
   };
 
   return (
@@ -130,7 +103,7 @@ export const FilledDeckCard = ({
         onClick={goToTheDeck}
       >
         <Loader isLoading={isLoading}>
-          <>
+          <LazyMotion features={domAnimation}>
             <div
               className={twMerge(
                 "relative mt-20 w-40 h-60",
@@ -139,10 +112,16 @@ export const FilledDeckCard = ({
               onMouseEnter={mouseEntered}
               onMouseLeave={mouseLeft}
             >
-              {firstSixOrLess.map((decks) => (
-                <div
+              {firstSixOrLess.map((decks, index) => (
+                <m.div
                   key={decks.name}
                   className="absolute"
+                  animate={{
+                    y: translateY(index), 
+                    x: translateX(index), 
+                    rotate: rotate(index),
+                    zIndex: isHovered ? 2 : 1,
+                  }}
                 >
                   <PreviewCard
                     className={twMerge(
@@ -153,7 +132,7 @@ export const FilledDeckCard = ({
                     nameOnSide={isHovered}
                     notInteractive
                   />
-                </div>
+                </m.div>
               ))}
             </div>
             {deck.username && (
@@ -163,9 +142,9 @@ export const FilledDeckCard = ({
               {deck.name}
             </p>
             <p className={twMerge("text-xl", notInteractive && "text-sm")}>
-              {deck.deckLength}/{process.env.NEXT_PUBLIC_DECK_MAX_SIZE}
+              {deck.deckLength}/{import.meta.env.PUBLIC_DECK_MAX_SIZE}
             </p>
-          </>
+          </LazyMotion>
         </Loader>
       </div>
       {removeDeck && (

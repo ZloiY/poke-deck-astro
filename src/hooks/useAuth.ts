@@ -1,18 +1,19 @@
 import { useStore } from "effector-react";
 import { useEffect, useState } from "react";
+import { $authToken } from "src/utils/authToken";
 import { z } from "zod";
 
-import { $authToken } from "src/utils/authToken";
-
-const getAuthInfo = (token: string): { id: string, name: string } | null => {
+const getAuthInfo = (token: string): { id: string; name: string } | null => {
   if (token.length > 0) {
-    const jwtTokenBody = token.split('.')[1];
+    const jwtTokenBody = token.split(".")[1];
     const body = JSON.parse(decodeURIComponent(atob(jwtTokenBody)));
-    const validatedBody = z.object({
-      id: z.string(),
-      name: z.string(),
-      exp: z.number(),
-    }).safeParse(body);
+    const validatedBody = z
+      .object({
+        id: z.string(),
+        name: z.string(),
+        exp: z.number(),
+      })
+      .safeParse(body);
     if (validatedBody.success) {
       if (new Date() < new Date(validatedBody.data.exp)) {
         const { id, name } = validatedBody.data;
@@ -21,7 +22,7 @@ const getAuthInfo = (token: string): { id: string, name: string } | null => {
     }
   }
   return null;
-}
+};
 
 export const useAuth = () => {
   const authToken = useStore($authToken);
@@ -29,7 +30,7 @@ export const useAuth = () => {
 
   useEffect(() => {
     setUser(getAuthInfo(authToken ?? ""));
-  }, [authToken])
+  }, [authToken]);
 
-  return user; 
-}
+  return user;
+};

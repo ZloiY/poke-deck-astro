@@ -1,0 +1,12 @@
+---
+import HeaderLayout from "src/layouts/HeaderLayout.astro";
+import { OtherUsersDecks } from "src/components/OtherUsersDecks";
+import { UserDecks } from "src/components/UserDecks";
+
+---
+<HeaderLayout showFlip={false} title="PokeDeck decks">
+    <div class="flex flex-col gap-8 w-full px-5">
+      <UserDecks client:only/>
+      <OtherUsersDecks client:only/>
+    </div>
+</HeaderLayout>

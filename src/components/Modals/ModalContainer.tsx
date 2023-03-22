@@ -1,14 +1,13 @@
 import type { Store } from "effector";
-import type { ReactNode } from "react";
 import { AnimatePresence, motion, useSpring } from "framer-motion";
+import type { ReactNode } from "react";
 import ReactModal from "react-modal";
+import { useModalState } from "src/hooks";
 import { twMerge } from "tailwind-merge";
 
 import { ReactComponent as Close } from "@icons/close.svg";
 
-import { useModalState } from "src/hooks";
-
-typeof window !== 'undefined' && ReactModal.setAppElement("main");
+typeof window !== "undefined" && ReactModal.setAppElement("main");
 
 export const ModalContainer = ({
   title = "",
@@ -19,9 +18,9 @@ export const ModalContainer = ({
   children: (onClose: () => void) => ReactNode;
   onClose?: () => void;
   title?: string;
-  anotherState?: Store<boolean>,
+  anotherState?: Store<boolean>;
 }) => {
-  const [modalState, { openModal, closeModal }] = useModalState(anotherState)
+  const [modalState, { openModal, closeModal }] = useModalState(anotherState);
 
   const onRequestClose = () => {
     const timeoutId = setTimeout(() => {
@@ -43,17 +42,22 @@ export const ModalContainer = ({
           initial={{ opacity: 0, scale: 0 }}
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 1 }}
-          transition={{ duration: 0.15, type: "spring", stiffness: 100}} 
-          className={twMerge(title && "bg-purple-900 text-white rounded-xl flex flex-col relative shadow-[0_0_20px_5px] shadow-purple-500")}
+          transition={{ duration: 0.15, type: "spring", stiffness: 100 }}
+          className={twMerge(
+            title &&
+              "bg-purple-900 text-white rounded-xl flex flex-col relative shadow-[0_0_20px_5px] shadow-purple-500",
+          )}
         >
-          {title && <div className="flex justify-between mb-2 p-3 border-b-2 border-yellow-500">
-            <span className="text-2xl font-coiny">{title}</span>
-            <Close
-              role="button"
-              className="cursor-pointer w-8 h-8 hover:text-yellow-400"
-              onClick={onRequestClose}
-            />
-          </div>}
+          {title && (
+            <div className="flex justify-between mb-2 p-3 border-b-2 border-yellow-500">
+              <span className="text-2xl font-coiny">{title}</span>
+              <Close
+                role="button"
+                className="cursor-pointer w-8 h-8 hover:text-yellow-400"
+                onClick={onRequestClose}
+              />
+            </div>
+          )}
           {children(onRequestClose)}
         </motion.div>
       </AnimatePresence>

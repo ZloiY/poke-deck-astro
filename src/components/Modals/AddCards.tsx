@@ -1,17 +1,22 @@
 import { useStore } from "effector-react";
 import { useEffect, useState } from "react";
+import { trpcReact } from "src/api";
 
 import { ReactComponent as Remove } from "@icons/close-circle.svg";
 import type { Deck } from "@prisma/client";
 
-import { $selectedPokemons, removePokemon, resetPokemons, useMessageBus, useModalState } from "../../hooks";
+import {
+  $selectedPokemons,
+  removePokemon,
+  resetPokemons,
+  useMessageBus,
+  useModalState,
+} from "../../hooks";
 import { Button } from "../Button";
 import { DeckCard, PreviewCard } from "../Cards";
 import { Loader } from "../Loader";
 import { Select } from "../Select";
 import { ModalContainer } from "./ModalContainer";
-import { trpcReact } from "src/api";
-
 
 export const AddCards = ({
   deckId,
@@ -20,25 +25,25 @@ export const AddCards = ({
   deckId?: string | null;
   onSubmit?: () => void;
 }) => {
-  const pokemons = useStore($selectedPokemons); 
+  const pokemons = useStore($selectedPokemons);
   const { data: deck, isLoading } = trpcReact.deck.getUserDeckById.useQuery({
     deckId,
   });
   const { data: userDecks, isLoading: decksLoading } =
     trpcReact.deck.getEmptyUserDecks.useQuery({
-      numberOfEmptySlots: 20, 
+      numberOfEmptySlots: 20,
     });
   const addCardsToDecks = trpcReact.deck.addCardsToDecks.useMutation();
   const [showModal, { closeModal, openModal }] = useModalState();
   const [selectedDeck, setSelectedDeck] = useState(deck);
   const { pushMessage } = useMessageBus();
-//  const transitions = useTransition(showModal ? pokemons : [], {
-//    trail: 400 / pokemons.length,
-//    keys: (pokemon) => pokemon.name,
-//    from: { opacity: 0, scale: 0 },
-//    enter: { opacity: 1, scale: 1 },
-//    config: config.stiff,
-//  });
+  //  const transitions = useTransition(showModal ? pokemons : [], {
+  //    trail: 400 / pokemons.length,
+  //    keys: (pokemon) => pokemon.name,
+  //    from: { opacity: 0, scale: 0 },
+  //    enter: { opacity: 1, scale: 1 },
+  //    config: config.stiff,
+  //  });
 
   useEffect(() => {
     if (deck) {
@@ -48,7 +53,7 @@ export const AddCards = ({
 
   useEffect(() => {
     if (pokemons.length == 0) {
-      closeModal(); 
+      closeModal();
     }
   }, [pokemons.length]);
 
@@ -70,7 +75,7 @@ export const AddCards = ({
         .then(onSubmit)
         .then(onClose)
         .then(() => {
-          location.assign(`/pokemons/${selectedDeck.id}`)
+          location.assign(`/pokemons/${selectedDeck.id}`);
         })
         .catch(pushMessage);
     }
@@ -83,29 +88,24 @@ export const AddCards = ({
           <div className="flex gap-10 w-full px-1">
             <Loader className="text-white" isLoading={isLoading}>
               <>
-                {selectedDeck && <DeckCard
-                  className="w-32 h-52 border-yellow-500 border-2"
-                  notInteractive={true}
-                  deck={selectedDeck}
-                />}
-                {(userDecks?.length ?? 0) > 0 &&
-                  <div className="flex justify-start items-center">
-                    <div className="flex gap-5 flex-col">
-                      <p className="font-coiny text-2xl">Select deck:</p>
-                      <Select
-                        className="w-64"
-                        defaultValue={selectedDeck}
-                        isLoading={decksLoading}
-                        onChange={(value) => setSelectedDeck(value as Deck)}
-                        getOptionLabel={(deck) =>
-                          `${deck.name} ${deck.deckLength}/${import.meta.env.PUBLIC_DECK_MAX_SIZE}`
-                        }
-                        isOptionSelected={(deck) => deck.id == selectedDeck?.id}
-                        options={userDecks}
-                      />
-                    </div>
-                  </div>
-                }
+                {selectedDeck && (
+                  <DeckCard
+                    className="w-32 h-52 border-yellow-500 border-2"
+                    notInteractive={true}
+                    deck={selectedDeck}
+                  />
+                )}
+                {(userDecks?.length ?? 0) > 0 && (
+                  <Select
+                    selectedItem={selectedDeck}
+                    className="w-64"
+                    placeholder="Select deck..."
+                    label="Select deck where you want to add Pokemons"
+                    onSelect={setSelectedDeck}
+                    showItemName={(deck) => deck.name} 
+                    items={userDecks}
+                  />
+                )}
               </>
             </Loader>
           </div>

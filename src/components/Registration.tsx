@@ -51,9 +51,9 @@ function Registration() {
             message: "You successfully signed in",
           });
           signInResponse.json().then(({ access_token }) => {
-            localStorage.setItem('poke_deck_astro_token', access_token);
+            localStorage.setItem("poke_deck_astro_token", access_token);
             location.assign("/home");
-          })
+          });
         } else {
           pushMessage({
             id: v4(),
@@ -136,7 +136,11 @@ function Registration() {
               "You should repeat your 'password'",
           })}
         />
-        <Button className="text-2xl h-12" type="submit" isLoading={createUser.isLoading || createUser.isSuccess}>
+        <Button
+          className="text-2xl h-12"
+          type="submit"
+          isLoading={createUser.isLoading || createUser.isSuccess}
+        >
           Register
         </Button>
         <span>
