@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { twMerge } from "tailwind-merge";
-import { useMotionValue, motion } from "framer-motion";
+import { LazyMotion, domAnimation, m } from "framer-motion";
 
 import { ReactComponent as Add } from "@icons/add-card.svg";
 import { ReactComponent as Delete } from "@icons/delete.svg";
@@ -103,7 +103,7 @@ export const FilledDeckCard = ({
         onClick={goToTheDeck}
       >
         <Loader isLoading={isLoading}>
-          <>
+          <LazyMotion features={domAnimation}>
             <div
               className={twMerge(
                 "relative mt-20 w-40 h-60",
@@ -113,7 +113,7 @@ export const FilledDeckCard = ({
               onMouseLeave={mouseLeft}
             >
               {firstSixOrLess.map((decks, index) => (
-                <motion.div
+                <m.div
                   key={decks.name}
                   className="absolute"
                   animate={{
@@ -132,7 +132,7 @@ export const FilledDeckCard = ({
                     nameOnSide={isHovered}
                     notInteractive
                   />
-                </motion.div>
+                </m.div>
               ))}
             </div>
             {deck.username && (
@@ -144,7 +144,7 @@ export const FilledDeckCard = ({
             <p className={twMerge("text-xl", notInteractive && "text-sm")}>
               {deck.deckLength}/{import.meta.env.PUBLIC_DECK_MAX_SIZE}
             </p>
-          </>
+          </LazyMotion>
         </Loader>
       </div>
       {removeDeck && (

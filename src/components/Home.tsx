@@ -1,6 +1,5 @@
 import { useStore } from "effector-react";
-import { AnimatePresence, motion } from "framer-motion";
-import type { Pokemon } from "pokenode-ts";
+import { AnimatePresence, m, LazyMotion, domAnimation } from "framer-motion";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { trpcReact } from "src/api";
 
@@ -162,13 +161,14 @@ const HomeUnwrapped = ({
         onPrevPage={pagination.goToPrevPage}
       />
       <Loader isLoading={isLoading}>
+       <LazyMotion features={domAnimation}>
         <AnimatePresence>
           <CardsGrid
             paginationState={pagination.paginationState}
             pokemons={pokemons}
           >
             {(pokemon, index) => (
-              <motion.div
+              <m.div
                 key={pokemon.id}
                 initial={{ opacity: 0, scale: 0 }}
                 animate={{ opacity: 1, scale: 1 }}
@@ -185,10 +185,11 @@ const HomeUnwrapped = ({
                   pokemonsInDeck={pokemonsInDeck}
                   keepFlipped={flipState}
                 />
-              </motion.div>
+              </m.div>
             )}
           </CardsGrid>
         </AnimatePresence>
+        </LazyMotion>
       </Loader>
     </div>
   );

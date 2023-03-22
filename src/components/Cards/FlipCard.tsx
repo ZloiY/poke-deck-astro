@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import { m, domAnimation, LazyMotion } from "framer-motion";
 import { memo, useEffect, useMemo, useState } from "react";
 
 import { DetailsCard } from "./DetailsCard";
@@ -37,12 +37,13 @@ export const FlipCard = memo(
     };
 
     return (
+    <LazyMotion features={domAnimation}>
       <div
         className="relative"
         onMouseEnter={() => toggleHovered("Details")}
         onMouseLeave={unHover}
       >
-        <motion.div
+        <m.div
           className="z-10"
           initial={{ opacity: 1, rotateY: 0 }}
           animate={{
@@ -53,8 +54,8 @@ export const FlipCard = memo(
           transition={{ duration: 0.5, type: "spring", mass: 2, stiffness: 60 }}
         >
           <PreviewCard pokemon={pokemon} />
-        </motion.div>
-        <motion.div
+        </m.div>
+        <m.div
           className="absolute top-0 z-30"
           initial={{ opacity: 0, rotateY: 180 }}
           animate={{
@@ -71,8 +72,9 @@ export const FlipCard = memo(
             pokemonsInDeck={pokemonsInDeck}
             removeFromDeck={removeFromDeck}
           />
-        </motion.div>
+        </m.div>
       </div>
+      </LazyMotion>
     );
   },
 );
