@@ -1,55 +1,46 @@
-# Astro Starter Kit: Basics
+# PokeDeck App 
 
-```
-npm create astro@latest -- --template basics
-```
+Another app where you can do different things with pokemons.
 
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/withastro/astro/tree/latest/examples/basics)
-[![Open with CodeSandbox](https://assets.codesandbox.io/github/button-edit-lime.svg)](https://codesandbox.io/p/sandbox/github/withastro/astro/tree/latest/examples/basics)
-[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/withastro/astro?devcontainer_path=.devcontainer/basics/devcontainer.json)
+## The tech stack
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+- [Astro](https://astro.build)
+- [Prisma](https://prisma.io)
+- [Tailwind CSS](https://tailwindcss.com)
+- [tRPC](https://trpc.io)
+- [Zod](https://zod.dev/)
+- [Framer-Motion](https://www.framer.com/motion/)
+- [effector](https://wwww.effector.dev)
 
-![basics](https://user-images.githubusercontent.com/4677417/186188965-73453154-fdec-4d6b-9c34-cb35c248ae5b.png)
+## How to launch
 
+First thing first you need to install npm deps via:
 
-## 🚀 Project Structure
+    pnpm install
 
-Inside of your Astro project, you'll see the following folders and files:
+Then you need to setup your `.env` by following `.env.example`.
+Setup the `schema.prisma` file for the preferable db. In my example we will use `sqlite`.
+To start using sqlite we need to do this change:
 
-```
-/
-├── public/
-│   └── favicon.svg
-├── src/
-│   ├── components/
-│   │   └── Card.astro
-│   ├── layouts/
-│   │   └── Layout.astro
-│   └── pages/
-│       └── index.astro
-└── package.json
-```
+Remove
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+    shadowDatabaseUrl = env("SHADOW_DB_URL")
+    relationMode      = "prisma"
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+Replace this
 
-Any static assets, like images, can be placed in the `public/` directory.
+    provider          = "mysql"
+with this
 
-## 🧞 Commands
+    provider          = "sqlite"
 
-All commands are run from the root of the project, from a terminal:
+Also don't forget to create `db.sqlite` in `prisma/` directory.
 
-| Command                | Action                                           |
-| :--------------------- | :----------------------------------------------- |
-| `npm install`          | Installs dependencies                            |
-| `npm run dev`          | Starts local dev server at `localhost:3000`      |
-| `npm run build`        | Build your production site to `./dist/`          |
-| `npm run preview`      | Preview your build locally, before deploying     |
-| `npm run astro ...`    | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro --help` | Get help using the Astro CLI                     |
+Remove the `prisma/migrations/` and launch
 
-## 👀 Want to learn more?
+    pnpx prisma migrate dev
 
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+And now you can run
+
+    pnpm run dev
+
