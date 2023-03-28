@@ -5,5 +5,5 @@ import { OtherUserDeck } from "src/components/OtherUserDeck";
 const { deckId } = Astro.params;
 ---
 <HeaderLayout title="PokeDeck user deck" showFlip={false}>
-  <OtherUserDeck deckId={deckId ?? ""} client:only/>
+  <OtherUserDeck deckId={deckId ?? ""} client:load/>
 </HeaderLayout>

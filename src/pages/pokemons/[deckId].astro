@@ -6,5 +6,5 @@ const { deckId } = Astro.params;
 
 ---
 <HeaderLayout title="PokeDeck User Deck" showFlip>
-  <PokemonsDeck deckId={deckId ?? ""} client:only/>
+  <PokemonsDeck deckId={deckId ?? ""} client:load/>
 </HeaderLayout>
