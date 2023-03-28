@@ -15,10 +15,9 @@ export const post: APIRoute = ({ request }) => {
         validatedToken.data.refresh_token,
         import.meta.env.AUTH_SECRET,
       );
-
       if (
         typeof refreshToken != "string" &&
-        new Date(refreshToken.exp ?? "") > new Date()
+        (refreshToken.exp ?? 0) > Date.now()
       ) {
         const newRefreshToken = jwt.sign({}, import.meta.env.AUTH_SECRET, {
           expiresIn: Date.now() + 7 * 24 * 60 * 60 * 1000,

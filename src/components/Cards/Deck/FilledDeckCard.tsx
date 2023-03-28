@@ -81,7 +81,10 @@ export const FilledDeckCard = ({
         <Add
           role="button"
           className="absolute top-2 left-1 w-14 h-14 text-white hover:text-yellow-400 active:text-yellow-500 active:scale-90 cursor-pointer"
-          onClick={() => addCard?.(deck.id)}
+          onClick={(event) => {
+            event.stopPropagation();
+            addCard?.(deck.id)
+          }}
         />
       )}
       {deck.private && (
@@ -100,7 +103,7 @@ export const FilledDeckCard = ({
         )}
         onClick={goToTheDeck}
       >
-        <Loader isLoading={isLoading}>
+        <Loader  className="text-white" isLoading={isLoading}>
           <LazyMotion features={domAnimation}>
             <div
               className={twMerge(
@@ -149,7 +152,10 @@ export const FilledDeckCard = ({
         <Delete
           role="button"
           className="absolute right-1 bottom-2 w-14 h-14 text-red-700 hover:text-red-500 active:text-red-600 active:scale-90"
-          onClick={() => removeDeck?.(deck.id)}
+          onClick={(event) => {
+            event.stopPropagation();
+            removeDeck?.(deck.id)
+          }}
         />
       )}
     </BlankDeckCard>

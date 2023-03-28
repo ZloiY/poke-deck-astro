@@ -5,6 +5,7 @@ export const validateToken = (decodedToken: unknown) =>
     .object({
       id: z.string(),
       name: z.string(),
+      numberOfDecks: z.number(),
       exp: z.number(),
       refresh_token: z.string(),
     })

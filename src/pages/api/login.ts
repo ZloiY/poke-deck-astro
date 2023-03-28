@@ -30,6 +30,7 @@ export const post: APIRoute = async ({ request }) => {
       const session: Session = {
         id: user.id,
         name: user.name,
+        numberOfDecks: user.decks.length,
         refresh_token,
       };
       const access_token = jwt.sign(session, import.meta.env.AUTH_SECRET, {

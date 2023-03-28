@@ -22,7 +22,7 @@ const { title } = Astro.props;
 		<title>{title}</title>
 	</head>
 	<body class="bg-purple-500 text-white h-full overflow-y-hidden">
-    <main id="main" class="flex flex-col h-full w-full items-center relative bg-purple-500 overflow-y-scroll">
+    <main id="main" class="h-full w-full items-center relative bg-purple-500 overflow-y-scroll">
       <PageLoader/>
       <NotificationsPopups client:load />
       <slot />

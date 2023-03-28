@@ -8,6 +8,7 @@ type CreateDeckParams = {
 type Session = {
   id: string;
   name: string;
+  numberOfDecks: number;
   refresh_token: string;
 };
 

@@ -8,11 +8,12 @@ export const checkToken = (access_token?: string) => {
     const validatedToken = validateToken(decodedToken);
     if (
       validatedToken.success &&
-      new Date(validatedToken.data.exp) > new Date()
+      validatedToken.data.exp > Date.now()
     ) {
       return {
         id: validatedToken.data.id,
         name: validatedToken.data.name,
+        numberOfDecks: validatedToken.data.numberOfDecks,
         refresh_token: validatedToken.data.refresh_token,
       };
     }

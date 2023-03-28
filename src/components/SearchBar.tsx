@@ -47,7 +47,7 @@ export const SearchBar = memo(
         border-white hover:border-yellow-500 focus:border-purple-900
         bg-transparent outline-none
         placeholder:italic placeholder:font-light placeholder:text-purple-900/75 placeholder:text-2xl"
-        value={search}
+        value={search ?? ""}
         placeholder={placeholder}
         onChange={onChange}
       />

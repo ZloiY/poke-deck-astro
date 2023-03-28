@@ -1,5 +1,6 @@
-import { FC, useState } from "react";
-import { getAuthToken } from "src/utils/authToken";
+import { FC, useEffect, useRef, useState } from "react";
+import { useStore } from "effector-react";
+import { $authTokenHeader, getAuthToken } from "src/utils/authToken";
 import superjson from "superjson";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -10,7 +11,8 @@ import { trpcReact } from "../api";
 export const TRPCWrapper =
   <Props extends {}>(Component: FC<Props>) =>
   (props: Props) => {
-    const [trpcReactClient] = useState(() =>
+    const authHeader = useStore($authTokenHeader);
+    const trpcReactClientRef = useRef(
       trpcReact.createClient({
         transformer: superjson,
         links: [
@@ -18,7 +20,7 @@ export const TRPCWrapper =
             url: "/api/trpc",
             headers() {
               return {
-                Authorization: getAuthToken(),
+                Authorization: authHeader,
               };
             },
           }),
@@ -26,11 +28,29 @@ export const TRPCWrapper =
       }),
     );
 
+    useEffect(() => {
+      trpcReactClientRef.current = 
+        trpcReact.createClient({
+          transformer: superjson,
+          links: [
+            httpBatchLink({
+              url: "/api/trpc",
+              headers() {
+                return {
+                  Authorization: authHeader,
+                };
+              },
+            }),
+          ],
+        });
+    }, [authHeader])
+
+
     const [reactQueryClient] = useState(() => new QueryClient());
 
     return (
       <trpcReact.Provider
-        client={trpcReactClient}
+        client={trpcReactClientRef.current}
         queryClient={reactQueryClient}
       >
         <QueryClientProvider client={reactQueryClient}>

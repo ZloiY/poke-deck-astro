@@ -9,6 +9,7 @@ import { DeckCard } from "./Cards/Deck/DeckCard";
 import { Loader } from "./Loader";
 import { CreateDeck } from "./Modals";
 import { TRPCWrapper } from "./TRPCWrapper";
+import { twMerge } from "tailwind-merge";
 
 const UnwrappedUserDecks = () => {
   const [_, { openModal }] = useModalState();
@@ -98,7 +99,8 @@ const UnwrappedUserDecks = () => {
         <div
           id="scroll-div"
           ref={parent}
-          className="w-full h-[520px] flex gap-5 overflow-x-scroll overflow-y-hidden pb-4 scrollbar-thin scrollbar-thumb-purple-900 scrollbar-track-transparent"
+          className={`w-full h-[520px] flex gap-5 overflow-x-scroll overflow-y-hidden pb-4
+          scrollbar-thin scrollbar-thumb-purple-900 scrollbar-track-transparent`}
         >
           {userDecks?.length != +import.meta.env.PUBLIC_USER_MAX_DECKS && (
             <AddDeckCard onClick={openModal} />

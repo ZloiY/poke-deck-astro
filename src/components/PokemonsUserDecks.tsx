@@ -28,7 +28,7 @@ const UnwrapedDecks = () => {
   };
 
   const addCardsToDeck = (deckId: string) => {
-    location.assign(`/home/${deckId}`);
+    location.assign(`/home?deckId=${deckId}`);
   };
 
   const addDeck = useCallback(async (params: CreateDeckParams) => {
@@ -37,7 +37,7 @@ const UnwrapedDecks = () => {
   }, []);
 
   return (
-    <div className="flex flex-col w-full h-full px-5 justify-center items-center">
+    <div className="flex flex-col w-full h-full px-5">
       <Refetch
         isRefetching={
           !isLoading &&

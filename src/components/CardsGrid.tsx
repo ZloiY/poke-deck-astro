@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import type { Pokemon } from "pokenode-ts";
 import { ReactElement, useCallback, useEffect, useState } from "react";
 import { twMerge } from "tailwind-merge";
@@ -38,7 +38,7 @@ export const CardsGrid = <P extends Pokemon>({
 
   return (
     <div className="h-full relative">
-      <motion.div
+      <m.div
         style={{
           x: 0,
           position: loadingState == "Hold" ? "static" : "absolute",
@@ -56,7 +56,7 @@ export const CardsGrid = <P extends Pokemon>({
         className={twMerge("w-full mt-5", cardGridStyles)}
       >
         {pokemons.map((pokemon, index) => children(pokemon, index))}
-      </motion.div>
+      </m.div>
     </div>
   );
 };

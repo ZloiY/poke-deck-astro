@@ -11,6 +11,7 @@ setAuthToken.watch((token) => {
 });
 const resetToken = createEvent();
 export const $authToken = createStore<string | null>(getAccessToken() ?? null);
+export const $authTokenHeader = $authToken.map((state) => state ? `Bearer ${state}` : '');
 $authToken.on(setAuthToken, (_, token) => token);
 $authToken.on(resetToken, () => null);
 

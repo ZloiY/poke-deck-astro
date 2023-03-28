@@ -11,6 +11,8 @@ const { title, showFlip } = Astro.props;
 
 ---
 <Layout title={title}>
-  <Header client:only showFlip={showFlip}/>
+  <div class="w-full h-20 sticky top-0 bg-purple-900 mb-10 z-50">
+    <Header client:only showFlip={showFlip}/>
+  </div>
   <slot/>
 </Layout>

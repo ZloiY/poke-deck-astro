@@ -71,10 +71,14 @@ const HomeUnwrapped = ({
     limit: 15,
     totalLength: 1275,
     onNextPage: (nextPage) => {
-      location.assign(`/home/${nextPage}`);
+      const mayberQuery = location.href.split('?')[1]; 
+      const queryParams = mayberQuery ? `?${mayberQuery}` : '';
+      location.assign(`/home/${nextPage}${queryParams}`);
     },
     onPrevPage: (prevPage) => {
-      location.assign(`/home/${prevPage}`);
+      const mayberQuery = location.href.split('?')[1]; 
+      const queryParams = mayberQuery ? `?${mayberQuery}` : '';
+      location.assign(`/home/${prevPage}${queryParams}`);
     },
   });
   const user = useAuth();
@@ -152,7 +156,7 @@ const HomeUnwrapped = ({
         existingPokemonsLength={pokemonsInDeck?.length ?? 0}
       />
       <div className="flex relative justify-center items-center">
-        <SearchBar searchValue={""} onSearch={updateQuery} />
+        <SearchBar searchValue={search} onSearch={updateQuery} />
       </div>
       <PaginationButtons
         showNext={pagination.hasNextPage}
