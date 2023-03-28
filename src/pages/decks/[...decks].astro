@@ -6,7 +6,7 @@ import { UserDecks } from "src/components/UserDecks";
 ---
 <HeaderLayout showFlip={false} title="PokeDeck decks">
     <div class="flex flex-col gap-8 mb-10 w-full px-5">
-      <UserDecks client:load/>
-      <OtherUsersDecks client:load/>
+      <UserDecks client:only/>
+      <OtherUsersDecks client:only/>
     </div>
 </HeaderLayout>
