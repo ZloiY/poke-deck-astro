@@ -11,6 +11,7 @@ Another app where you can do different things with pokemons.
 - [Zod](https://zod.dev/)
 - [Framer-Motion](https://www.framer.com/motion/)
 - [effector](https://wwww.effector.dev)
+- [Pokenode-ts](https://pokenode-ts.vercel.app/)
 
 ## How to launch
 
