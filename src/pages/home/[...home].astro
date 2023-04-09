@@ -1,8 +1,11 @@
 ---
+import { z } from "zod";
 import HeaderLayout from "src/layouts/HeaderLayout.astro";
 import { Home } from "../../components/Home"; 
 import { getQueryParams } from "src/utils/queryParser";
-import { z } from "zod";
+import { appRouter } from "src/server/api/root";
+import { prisma } from "src/server/db";
+import { Pokemon, PokemonClient } from "pokenode-ts";
 
 const { home } = Astro.params;
 const queryShema = z.object({
@@ -13,7 +16,28 @@ const queryShema = z.object({
 const url = Astro.url;
 const queryParams = getQueryParams<typeof queryShema>(url.href ?? "", queryShema); 
 const page = z.number().parse(+(home ?? '0'));
+const pokemonApi = new PokemonClient();
+const caller = appRouter.createCaller({ session: null, prisma, pokemonApi });
+const pokemons = await caller.pokemon
+  .getPokemonList({ offset: page * 15, limit: 15, searchQuery: queryParams?.search })
+  .then((pokemons) => pokemons.map((pokemon) => {
+    const { name, id, stats, height, weight, sprites, abilities } = pokemon;
+    return {
+      id,
+      name,
+      stats,
+      height,
+      weight,
+      sprites,
+      abilities
+    } as Pokemon
+  }))
 ---
 <HeaderLayout title="PokeDeck home" showFlip={true}>
-  <Home page={page} search={queryParams?.search} deckId={queryParams?.deckId} client:only/>
+  <Home
+  page={page}
+  pokemons={pokemons}
+  search={queryParams?.search}
+  deckId={queryParams?.deckId}
+  client:load/>
 </HeaderLayout>

@@ -31,7 +31,6 @@ const UnwrappedOtherUserDecks = () => {
     count: hasNextPage ? decks?.length + 1 : decks?.length,
     getScrollElement: () => parent.current,
     estimateSize: () => 320,
-    overscan: 7,
   });
 
   const viewDeck = (deckId: string) => {
@@ -39,7 +38,8 @@ const UnwrappedOtherUserDecks = () => {
   };
 
   useEffect(() => {
-    const [lastItem] = [...virtualColumn.getVirtualItems()].reverse();
+    const virtualItems = virtualColumn.getVirtualItems();
+    const lastItem = virtualItems[virtualItems.length - 1];
     if (!lastItem) {
       return;
     }
@@ -77,7 +77,8 @@ const UnwrappedOtherUserDecks = () => {
               className="h-full relative text-center text-3xl"
               style={{ width: `${virtualColumn.getTotalSize()}px` }}
             >
-              {virtualColumn.getVirtualItems().map((virtualItem) => (
+              {virtualColumn.getVirtualItems().map((virtualItem) =>
+                virtualItem.index < decks.length && (
                 <div
                   key={virtualItem.index}
                   className="h-full"

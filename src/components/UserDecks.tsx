@@ -9,7 +9,6 @@ import { DeckCard } from "./Cards/Deck/DeckCard";
 import { Loader } from "./Loader";
 import { CreateDeck } from "./Modals";
 import { TRPCWrapper } from "./TRPCWrapper";
-import { twMerge } from "tailwind-merge";
 
 const UnwrappedUserDecks = () => {
   const [_, { openModal }] = useModalState();
@@ -38,7 +37,7 @@ const UnwrappedUserDecks = () => {
 
   const virtualColumn = useVirtualizer({
     horizontal: true,
-    count: false ? userDecks?.length + 1 : userDecks?.length,
+    count: hasNextPage ? userDecks?.length + 1 : userDecks?.length,
     getScrollElement: () => parent.current,
     estimateSize: () => 320,
     overscan: 4,
@@ -110,7 +109,8 @@ const UnwrappedUserDecks = () => {
               className="h-full relative text-center text-3xl"
               style={{ width: `${virtualColumn.getTotalSize()}px` }}
             >
-              {virtualColumn.getVirtualItems().map((virtualItem) => (
+              {virtualColumn.getVirtualItems().map((virtualItem) =>
+               virtualItem.index < userDecks.length && (
                 <div
                   key={virtualItem.index}
                   className="h-full"

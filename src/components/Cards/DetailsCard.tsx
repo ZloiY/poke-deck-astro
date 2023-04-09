@@ -1,5 +1,5 @@
 import type { Pokemon } from "pokenode-ts";
-import { memo, useCallback, useMemo, useState } from "react";
+import { memo, useCallback, useEffect, useMemo, useState } from "react";
 import { pushPokemon, removePokemon, useAuth } from "src/hooks";
 import { twMerge } from "tailwind-merge";
 
@@ -29,7 +29,11 @@ export const DetailsCard = memo(
       () => !!selectedPokemons.find(({ name }) => name == pokemon.name),
       [selectedPokemons, pokemon],
     );
+    const [count, setCount] = useState(0);
     const user = useAuth();
+    useEffect(() => {
+      setCount((prev) => prev + 1);
+    }, [user]);
 
     const isDeckFull = useMemo(
       () =>
@@ -95,7 +99,7 @@ export const DetailsCard = memo(
               />
             )
           : !removeFromDeck &&
-            user &&
+            user && count > 1 &&
             !isDeckFull && (
               <Add
                 role="button"

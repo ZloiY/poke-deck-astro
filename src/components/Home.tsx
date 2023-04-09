@@ -7,8 +7,7 @@ import { ReactComponent as Check } from "@icons/check.svg";
 
 import { FlipCard } from "../components/Cards";
 import { CardsGrid } from "../components/CardsGrid";
-import { Loader } from "../components/Loader";
-import { AddCards, CreateDeck } from "../components/Modals";
+import { AddCards, CreateDeck, Refetch } from "../components/Modals";
 import { PaginationButtons } from "../components/PaginationButtons";
 import { SearchBar } from "../components/SearchBar";
 import {
@@ -58,14 +57,17 @@ const FixedButton = ({
 const HomeUnwrapped = ({
   page,
   deckId,
+  pokemons,
   search = "",
 }: {
   deckId?: string;
   page: number;
+  pokemons: [];
   search?: string;
 }) => {
   const [_, { openModal }] = useModalState();
   const { flipState } = useFlipState();
+  const [isRefetching, setRefetching] = useState(false);
   const pagination = usePagination({
     page,
     limit: 15,
@@ -84,12 +86,6 @@ const HomeUnwrapped = ({
   const user = useAuth();
   const { pushMessage } = useMessageBus();
   const selectedPokemons = useStore($selectedPokemons);
-  const { data: pokemons, isLoading } =
-    trpcReact.pokemon.getPokemonList.useQuery({
-      offset: page * 15,
-      limit: 15,
-      searchQuery: search,
-    });
   const { data: emptyDecks } = trpcReact.deck.getEmptyUserDecks.useQuery(
     { numberOfEmptySlots: 20 },
     { enabled: !!user },
@@ -101,23 +97,7 @@ const HomeUnwrapped = ({
   const { mutateAsync: createDeck, isLoading: deckCreating } =
     trpcReact.deck.createDeck.useMutation();
 
-  useEffect(() => {
-    return () => {
-      resetPokemons();
-    };
-  }, []);
-
   const decksLength = useMemo(() => emptyDecks?.length ?? 0, [emptyDecks]);
-
-  // const drag = useDrag(({ down, axis, delta: [x] }) => {
-  //   if (down && axis == "x") {
-  //     if (x > 0) {
-  //       pagination.goToPrevPage();
-  //     } else if (x < 0) {
-  //       pagination.goToNextPage();
-  //     }
-  //   }
-  // });
 
   const createDeckWithCards = useCallback(
     (params: { name: string; private: boolean }) => {
@@ -128,13 +108,14 @@ const HomeUnwrapped = ({
           pokemon.sprites.front_default ??
           "",
       }));
+      setRefetching(true);
       createDeck({ ...params, cards })
         .then((message) => {
+          resetPokemons();
+          pushMessage(message);
+          setRefetching(false);
           location.assign(`/pokemons/deck/${message.deck?.id}`);
-          return message;
         })
-        .then(pushMessage)
-        .then(resetPokemons);
     },
     [selectedPokemons],
   );
@@ -155,6 +136,7 @@ const HomeUnwrapped = ({
         onClick={openModal}
         existingPokemonsLength={pokemonsInDeck?.length ?? 0}
       />
+      <Refetch isRefetching={isRefetching}/>
       <div className="flex relative justify-center items-center">
         <SearchBar searchValue={search} onSearch={updateQuery} />
       </div>
@@ -164,37 +146,35 @@ const HomeUnwrapped = ({
         onNextPage={pagination.goToNextPage}
         onPrevPage={pagination.goToPrevPage}
       />
-      <Loader isLoading={isLoading}>
-        <LazyMotion features={domAnimation}>
-          <AnimatePresence>
-            <CardsGrid
-              paginationState={pagination.paginationState}
-              pokemons={pokemons}
-            >
-              {(pokemon, index) => (
-                <m.div
-                  key={pokemon.id}
-                  initial={{ opacity: 0, scale: 0 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{
-                    duration: 0.1,
-                    type: "spring",
-                    stiffness: 80,
-                    delay: index * 0.2,
-                  }}
-                >
-                  <FlipCard
-                    pokemon={pokemon}
-                    selectedPokemons={selectedPokemons}
-                    pokemonsInDeck={pokemonsInDeck}
-                    keepFlipped={flipState}
-                  />
-                </m.div>
-              )}
-            </CardsGrid>
-          </AnimatePresence>
-        </LazyMotion>
-      </Loader>
+      <LazyMotion features={domAnimation}>
+        <AnimatePresence>
+          <CardsGrid
+            paginationState={pagination.paginationState}
+            pokemons={pokemons}
+          >
+            {(pokemon, index) => (
+              <m.div
+                key={pokemon.id}
+                initial={{ opacity: 0, scale: 0 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{
+                  duration: 0.1,
+                  type: "spring",
+                  stiffness: 80,
+                  delay: index * 0.2,
+                }}
+              >
+                <FlipCard
+                  pokemon={pokemon}
+                  selectedPokemons={selectedPokemons}
+                  pokemonsInDeck={pokemonsInDeck}
+                  keepFlipped={flipState}
+                />
+              </m.div>
+            )}
+          </CardsGrid>
+        </AnimatePresence>
+      </LazyMotion>
     </div>
   );
 };
